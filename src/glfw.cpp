@@ -1,20 +1,17 @@
-#include <node.h>
+#include <native-helper.h>
 #include <GLFW/glfw3.h>
 
-void GlfwInit(const v8::FunctionCallbackInfo<v8::Value>& args) {
+NATIVE_FUNCTION(GlfwInit) {
     v8::Isolate* isolate = args.GetIsolate();
-    bool result = (glfwInit() == GLFW_TRUE);
-    args.GetReturnValue().Set(v8::Boolean::New(isolate, result));
+    RETURN(TO_BOOLEAN(glfwInit() == GLFW_TRUE));
 }
 
-void GlfwTerminate(const v8::FunctionCallbackInfo<v8::Value>& args) {
+NATIVE_FUNCTION(GlfwTerminate) {
     glfwTerminate();
-    args.GetReturnValue().Set(v8::Undefined(args.GetIsolate()));
+    RETURN_UNDEFINED;
 }
 
 //==========================INIT==========================//
-
-#define EXPORT_CONST(key, val) exports->Set(v8::String::NewFromUtf8(isolate, key), v8::Number::New(isolate, val))
 
 void Init(v8::Local<v8::Object> exports) {
     v8::Isolate* isolate = exports->GetIsolate();
