@@ -1,17 +1,19 @@
 #pragma once
+
+// Includes
 #include <node.h>
 
-// Convert to v8 values
+// Type Conversions
 #define TO_STRING(x) v8::String::NewFromUtf8(isolate, x)
 #define TO_NUMBER(x) v8::Number::New(isolate, x)
 #define TO_BOOLEAN(x) v8::Boolean::New(isolate, x)
 
-// Function header
+// Function Helpers
 #define NATIVE_FUNCTION(name) void name(const v8::FunctionCallbackInfo<v8::Value>& args)
+#define THROW_ERROR(error) isolate->ThrowException(v8::Exception::Error(TO_STRING(error))); return
+#define THROW_TYPE_ERROR(error) isolate->ThrowException(v8::Exception::TypeError(TO_STRING(error))); return
+#define RETURN(x) args.GetReturnValue().Set(x); return
+#define RETURN_UNDEFINED RETURN(v8::Undefined(isolate)); return
 
-// Returns
-#define RETURN(x) args.GetReturnValue().Set(x)
-#define RETURN_UNDEFINED args.GetReturnValue().Set(v8::Undefined(args.GetIsolate()))
-
-// Export constants
-#define EXPORT_CONST(key, val) exports->Set(TO_STRING(key), TO_NUMBER(val))
+// Exports
+#define EXPORT_CONST(name, x) exports->Set(TO_STRING(name), TO_NUMBER(x))
