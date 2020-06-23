@@ -13,11 +13,754 @@
 #include <native-helper.h>
 #include <GLFW/glfw3.h>
 
-//<FUNCTIONS>
+NATIVE_FUNCTION(Init) {
+	v8::Isolate* isolate = args.GetIsolate();
+	int ret = glfwInit();
+	RETURN(TO_NUMBER(ret));
+}
+NATIVE_FUNCTION(Terminate) {
+	glfwTerminate();
+}
+NATIVE_FUNCTION(InitHint) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 2) { THROW_ERROR("InitHint takes 2 arguments."); }
+	if(!args[0]->IsNumber()) { THROW_TYPE_ERROR("hint is of type number!"); }
+	int arg0 = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	if(!args[1]->IsNumber()) { THROW_TYPE_ERROR("value is of type number!"); }
+	int arg1 = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+}
+NATIVE_FUNCTION(GetVersion) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 3) { THROW_ERROR("GetVersion takes 3 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+	//!UNKNOWN TYPE for arg1!//
+	//!UNKNOWN TYPE for arg2!//
+}
+NATIVE_FUNCTION(GetVersionString) {
+	v8::Isolate* isolate = args.GetIsolate();
+	const char* ret = glfwGetVersionString();
+	RETURN(TO_NUMBER(ret));
+}
+NATIVE_FUNCTION(GetError) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 1) { THROW_ERROR("GetError takes 1 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+}
+NATIVE_FUNCTION(SetErrorCallback) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 1) { THROW_ERROR("SetErrorCallback takes 1 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+}
+NATIVE_FUNCTION(GetMonitors) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 1) { THROW_ERROR("GetMonitors takes 1 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+}
+NATIVE_FUNCTION(GetPrimaryMonitor) {
+	v8::Isolate* isolate = args.GetIsolate();
+	GLFWmonitor* ret = glfwGetPrimaryMonitor();
+	RETURN(TO_NUMBER(ret));
+}
+NATIVE_FUNCTION(GetMonitorPos) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 3) { THROW_ERROR("GetMonitorPos takes 3 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+	//!UNKNOWN TYPE for arg1!//
+	//!UNKNOWN TYPE for arg2!//
+}
+NATIVE_FUNCTION(GetMonitorWorkarea) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 5) { THROW_ERROR("GetMonitorWorkarea takes 5 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+	//!UNKNOWN TYPE for arg1!//
+	//!UNKNOWN TYPE for arg2!//
+	//!UNKNOWN TYPE for arg3!//
+	//!UNKNOWN TYPE for arg4!//
+}
+NATIVE_FUNCTION(GetMonitorPhysicalSize) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 3) { THROW_ERROR("GetMonitorPhysicalSize takes 3 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+	//!UNKNOWN TYPE for arg1!//
+	//!UNKNOWN TYPE for arg2!//
+}
+NATIVE_FUNCTION(GetMonitorContentScale) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 3) { THROW_ERROR("GetMonitorContentScale takes 3 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+	//!UNKNOWN TYPE for arg1!//
+	//!UNKNOWN TYPE for arg2!//
+}
+NATIVE_FUNCTION(GetMonitorName) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 1) { THROW_ERROR("GetMonitorName takes 1 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+}
+NATIVE_FUNCTION(SetMonitorUserPointer) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 2) { THROW_ERROR("SetMonitorUserPointer takes 2 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+	//!UNKNOWN TYPE for arg1!//
+}
+NATIVE_FUNCTION(GetMonitorUserPointer) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 1) { THROW_ERROR("GetMonitorUserPointer takes 1 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+}
+NATIVE_FUNCTION(SetMonitorCallback) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 1) { THROW_ERROR("SetMonitorCallback takes 1 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+}
+NATIVE_FUNCTION(GetVideoModes) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 2) { THROW_ERROR("GetVideoModes takes 2 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+	//!UNKNOWN TYPE for arg1!//
+}
+NATIVE_FUNCTION(GetVideoMode) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 1) { THROW_ERROR("GetVideoMode takes 1 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+}
+NATIVE_FUNCTION(SetGamma) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 2) { THROW_ERROR("SetGamma takes 2 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+	if(!args[1]->IsNumber()) { THROW_TYPE_ERROR("gamma is of type number!"); }
+	float arg1 = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+}
+NATIVE_FUNCTION(GetGammaRamp) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 1) { THROW_ERROR("GetGammaRamp takes 1 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+}
+NATIVE_FUNCTION(SetGammaRamp) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 2) { THROW_ERROR("SetGammaRamp takes 2 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+	//!UNKNOWN TYPE for arg1!//
+}
+NATIVE_FUNCTION(DefaultWindowHints) {
+	glfwDefaultWindowHints();
+}
+NATIVE_FUNCTION(WindowHint) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 2) { THROW_ERROR("WindowHint takes 2 arguments."); }
+	if(!args[0]->IsNumber()) { THROW_TYPE_ERROR("hint is of type number!"); }
+	int arg0 = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	if(!args[1]->IsNumber()) { THROW_TYPE_ERROR("value is of type number!"); }
+	int arg1 = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+}
+NATIVE_FUNCTION(WindowHintString) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 2) { THROW_ERROR("WindowHintString takes 2 arguments."); }
+	if(!args[0]->IsNumber()) { THROW_TYPE_ERROR("hint is of type number!"); }
+	int arg0 = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	//!UNKNOWN TYPE for arg1!//
+}
+NATIVE_FUNCTION(CreateWindow) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 5) { THROW_ERROR("CreateWindow takes 5 arguments."); }
+	if(!args[0]->IsNumber()) { THROW_TYPE_ERROR("width is of type number!"); }
+	int arg0 = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	if(!args[1]->IsNumber()) { THROW_TYPE_ERROR("height is of type number!"); }
+	int arg1 = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	//!UNKNOWN TYPE for arg2!//
+	//!UNKNOWN TYPE for arg3!//
+	//!UNKNOWN TYPE for arg4!//
+}
+NATIVE_FUNCTION(DestroyWindow) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 1) { THROW_ERROR("DestroyWindow takes 1 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+}
+NATIVE_FUNCTION(WindowShouldClose) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 1) { THROW_ERROR("WindowShouldClose takes 1 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+}
+NATIVE_FUNCTION(SetWindowShouldClose) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 2) { THROW_ERROR("SetWindowShouldClose takes 2 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+	if(!args[1]->IsNumber()) { THROW_TYPE_ERROR("value is of type number!"); }
+	int arg1 = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+}
+NATIVE_FUNCTION(SetWindowTitle) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 2) { THROW_ERROR("SetWindowTitle takes 2 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+	//!UNKNOWN TYPE for arg1!//
+}
+NATIVE_FUNCTION(SetWindowIcon) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 3) { THROW_ERROR("SetWindowIcon takes 3 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+	if(!args[1]->IsNumber()) { THROW_TYPE_ERROR("count is of type number!"); }
+	int arg1 = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	//!UNKNOWN TYPE for arg2!//
+}
+NATIVE_FUNCTION(GetWindowPos) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 3) { THROW_ERROR("GetWindowPos takes 3 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+	//!UNKNOWN TYPE for arg1!//
+	//!UNKNOWN TYPE for arg2!//
+}
+NATIVE_FUNCTION(SetWindowPos) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 3) { THROW_ERROR("SetWindowPos takes 3 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+	if(!args[1]->IsNumber()) { THROW_TYPE_ERROR("xpos is of type number!"); }
+	int arg1 = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	if(!args[2]->IsNumber()) { THROW_TYPE_ERROR("ypos is of type number!"); }
+	int arg2 = args[2]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+}
+NATIVE_FUNCTION(GetWindowSize) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 3) { THROW_ERROR("GetWindowSize takes 3 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+	//!UNKNOWN TYPE for arg1!//
+	//!UNKNOWN TYPE for arg2!//
+}
+NATIVE_FUNCTION(SetWindowSizeLimits) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 5) { THROW_ERROR("SetWindowSizeLimits takes 5 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+	if(!args[1]->IsNumber()) { THROW_TYPE_ERROR("minwidth is of type number!"); }
+	int arg1 = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	if(!args[2]->IsNumber()) { THROW_TYPE_ERROR("minheight is of type number!"); }
+	int arg2 = args[2]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	if(!args[3]->IsNumber()) { THROW_TYPE_ERROR("maxwidth is of type number!"); }
+	int arg3 = args[3]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	if(!args[4]->IsNumber()) { THROW_TYPE_ERROR("maxheight is of type number!"); }
+	int arg4 = args[4]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+}
+NATIVE_FUNCTION(SetWindowAspectRatio) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 3) { THROW_ERROR("SetWindowAspectRatio takes 3 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+	if(!args[1]->IsNumber()) { THROW_TYPE_ERROR("numer is of type number!"); }
+	int arg1 = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	if(!args[2]->IsNumber()) { THROW_TYPE_ERROR("denom is of type number!"); }
+	int arg2 = args[2]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+}
+NATIVE_FUNCTION(SetWindowSize) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 3) { THROW_ERROR("SetWindowSize takes 3 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+	if(!args[1]->IsNumber()) { THROW_TYPE_ERROR("width is of type number!"); }
+	int arg1 = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	if(!args[2]->IsNumber()) { THROW_TYPE_ERROR("height is of type number!"); }
+	int arg2 = args[2]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+}
+NATIVE_FUNCTION(GetFramebufferSize) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 3) { THROW_ERROR("GetFramebufferSize takes 3 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+	//!UNKNOWN TYPE for arg1!//
+	//!UNKNOWN TYPE for arg2!//
+}
+NATIVE_FUNCTION(GetWindowFrameSize) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 5) { THROW_ERROR("GetWindowFrameSize takes 5 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+	//!UNKNOWN TYPE for arg1!//
+	//!UNKNOWN TYPE for arg2!//
+	//!UNKNOWN TYPE for arg3!//
+	//!UNKNOWN TYPE for arg4!//
+}
+NATIVE_FUNCTION(GetWindowContentScale) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 3) { THROW_ERROR("GetWindowContentScale takes 3 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+	//!UNKNOWN TYPE for arg1!//
+	//!UNKNOWN TYPE for arg2!//
+}
+NATIVE_FUNCTION(GetWindowOpacity) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 1) { THROW_ERROR("GetWindowOpacity takes 1 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+}
+NATIVE_FUNCTION(SetWindowOpacity) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 2) { THROW_ERROR("SetWindowOpacity takes 2 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+	if(!args[1]->IsNumber()) { THROW_TYPE_ERROR("opacity is of type number!"); }
+	float arg1 = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+}
+NATIVE_FUNCTION(IconifyWindow) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 1) { THROW_ERROR("IconifyWindow takes 1 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+}
+NATIVE_FUNCTION(RestoreWindow) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 1) { THROW_ERROR("RestoreWindow takes 1 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+}
+NATIVE_FUNCTION(MaximizeWindow) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 1) { THROW_ERROR("MaximizeWindow takes 1 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+}
+NATIVE_FUNCTION(ShowWindow) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 1) { THROW_ERROR("ShowWindow takes 1 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+}
+NATIVE_FUNCTION(HideWindow) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 1) { THROW_ERROR("HideWindow takes 1 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+}
+NATIVE_FUNCTION(FocusWindow) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 1) { THROW_ERROR("FocusWindow takes 1 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+}
+NATIVE_FUNCTION(RequestWindowAttention) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 1) { THROW_ERROR("RequestWindowAttention takes 1 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+}
+NATIVE_FUNCTION(GetWindowMonitor) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 1) { THROW_ERROR("GetWindowMonitor takes 1 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+}
+NATIVE_FUNCTION(SetWindowMonitor) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 7) { THROW_ERROR("SetWindowMonitor takes 7 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+	//!UNKNOWN TYPE for arg1!//
+	if(!args[2]->IsNumber()) { THROW_TYPE_ERROR("xpos is of type number!"); }
+	int arg2 = args[2]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	if(!args[3]->IsNumber()) { THROW_TYPE_ERROR("ypos is of type number!"); }
+	int arg3 = args[3]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	if(!args[4]->IsNumber()) { THROW_TYPE_ERROR("width is of type number!"); }
+	int arg4 = args[4]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	if(!args[5]->IsNumber()) { THROW_TYPE_ERROR("height is of type number!"); }
+	int arg5 = args[5]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	if(!args[6]->IsNumber()) { THROW_TYPE_ERROR("refreshRate is of type number!"); }
+	int arg6 = args[6]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+}
+NATIVE_FUNCTION(GetWindowAttrib) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 2) { THROW_ERROR("GetWindowAttrib takes 2 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+	if(!args[1]->IsNumber()) { THROW_TYPE_ERROR("attrib is of type number!"); }
+	int arg1 = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+}
+NATIVE_FUNCTION(SetWindowAttrib) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 3) { THROW_ERROR("SetWindowAttrib takes 3 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+	if(!args[1]->IsNumber()) { THROW_TYPE_ERROR("attrib is of type number!"); }
+	int arg1 = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	if(!args[2]->IsNumber()) { THROW_TYPE_ERROR("value is of type number!"); }
+	int arg2 = args[2]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+}
+NATIVE_FUNCTION(SetWindowUserPointer) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 2) { THROW_ERROR("SetWindowUserPointer takes 2 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+	//!UNKNOWN TYPE for arg1!//
+}
+NATIVE_FUNCTION(GetWindowUserPointer) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 1) { THROW_ERROR("GetWindowUserPointer takes 1 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+}
+NATIVE_FUNCTION(SetWindowPosCallback) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 2) { THROW_ERROR("SetWindowPosCallback takes 2 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+	//!UNKNOWN TYPE for arg1!//
+}
+NATIVE_FUNCTION(SetWindowSizeCallback) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 2) { THROW_ERROR("SetWindowSizeCallback takes 2 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+	//!UNKNOWN TYPE for arg1!//
+}
+NATIVE_FUNCTION(SetWindowCloseCallback) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 2) { THROW_ERROR("SetWindowCloseCallback takes 2 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+	//!UNKNOWN TYPE for arg1!//
+}
+NATIVE_FUNCTION(SetWindowRefreshCallback) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 2) { THROW_ERROR("SetWindowRefreshCallback takes 2 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+	//!UNKNOWN TYPE for arg1!//
+}
+NATIVE_FUNCTION(SetWindowFocusCallback) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 2) { THROW_ERROR("SetWindowFocusCallback takes 2 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+	//!UNKNOWN TYPE for arg1!//
+}
+NATIVE_FUNCTION(SetWindowIconifyCallback) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 2) { THROW_ERROR("SetWindowIconifyCallback takes 2 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+	//!UNKNOWN TYPE for arg1!//
+}
+NATIVE_FUNCTION(SetWindowMaximizeCallback) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 2) { THROW_ERROR("SetWindowMaximizeCallback takes 2 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+	//!UNKNOWN TYPE for arg1!//
+}
+NATIVE_FUNCTION(SetFramebufferSizeCallback) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 2) { THROW_ERROR("SetFramebufferSizeCallback takes 2 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+	//!UNKNOWN TYPE for arg1!//
+}
+NATIVE_FUNCTION(SetWindowContentScaleCallback) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 2) { THROW_ERROR("SetWindowContentScaleCallback takes 2 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+	//!UNKNOWN TYPE for arg1!//
+}
+NATIVE_FUNCTION(PollEvents) {
+	glfwPollEvents();
+}
+NATIVE_FUNCTION(WaitEvents) {
+	glfwWaitEvents();
+}
+NATIVE_FUNCTION(WaitEventsTimeout) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 1) { THROW_ERROR("WaitEventsTimeout takes 1 arguments."); }
+	if(!args[0]->IsNumber()) { THROW_TYPE_ERROR("timeout is of type number!"); }
+	double arg0 = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+}
+NATIVE_FUNCTION(PostEmptyEvent) {
+	glfwPostEmptyEvent();
+}
+NATIVE_FUNCTION(GetInputMode) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 2) { THROW_ERROR("GetInputMode takes 2 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+	if(!args[1]->IsNumber()) { THROW_TYPE_ERROR("mode is of type number!"); }
+	int arg1 = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+}
+NATIVE_FUNCTION(SetInputMode) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 3) { THROW_ERROR("SetInputMode takes 3 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+	if(!args[1]->IsNumber()) { THROW_TYPE_ERROR("mode is of type number!"); }
+	int arg1 = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	if(!args[2]->IsNumber()) { THROW_TYPE_ERROR("value is of type number!"); }
+	int arg2 = args[2]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+}
+NATIVE_FUNCTION(RawMouseMotionSupported) {
+	v8::Isolate* isolate = args.GetIsolate();
+	int ret = glfwRawMouseMotionSupported();
+	RETURN(TO_NUMBER(ret));
+}
+NATIVE_FUNCTION(GetKeyName) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 2) { THROW_ERROR("GetKeyName takes 2 arguments."); }
+	if(!args[0]->IsNumber()) { THROW_TYPE_ERROR("key is of type number!"); }
+	int arg0 = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	if(!args[1]->IsNumber()) { THROW_TYPE_ERROR("scancode is of type number!"); }
+	int arg1 = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+}
+NATIVE_FUNCTION(GetKeyScancode) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 1) { THROW_ERROR("GetKeyScancode takes 1 arguments."); }
+	if(!args[0]->IsNumber()) { THROW_TYPE_ERROR("key is of type number!"); }
+	int arg0 = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+}
+NATIVE_FUNCTION(GetKey) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 2) { THROW_ERROR("GetKey takes 2 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+	if(!args[1]->IsNumber()) { THROW_TYPE_ERROR("key is of type number!"); }
+	int arg1 = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+}
+NATIVE_FUNCTION(GetMouseButton) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 2) { THROW_ERROR("GetMouseButton takes 2 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+	if(!args[1]->IsNumber()) { THROW_TYPE_ERROR("button is of type number!"); }
+	int arg1 = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+}
+NATIVE_FUNCTION(GetCursorPos) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 3) { THROW_ERROR("GetCursorPos takes 3 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+	//!UNKNOWN TYPE for arg1!//
+	//!UNKNOWN TYPE for arg2!//
+}
+NATIVE_FUNCTION(SetCursorPos) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 3) { THROW_ERROR("SetCursorPos takes 3 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+	if(!args[1]->IsNumber()) { THROW_TYPE_ERROR("xpos is of type number!"); }
+	double arg1 = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	if(!args[2]->IsNumber()) { THROW_TYPE_ERROR("ypos is of type number!"); }
+	double arg2 = args[2]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+}
+NATIVE_FUNCTION(CreateCursor) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 3) { THROW_ERROR("CreateCursor takes 3 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+	if(!args[1]->IsNumber()) { THROW_TYPE_ERROR("xhot is of type number!"); }
+	int arg1 = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	if(!args[2]->IsNumber()) { THROW_TYPE_ERROR("yhot is of type number!"); }
+	int arg2 = args[2]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+}
+NATIVE_FUNCTION(CreateStandardCursor) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 1) { THROW_ERROR("CreateStandardCursor takes 1 arguments."); }
+	if(!args[0]->IsNumber()) { THROW_TYPE_ERROR("shape is of type number!"); }
+	int arg0 = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+}
+NATIVE_FUNCTION(DestroyCursor) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 1) { THROW_ERROR("DestroyCursor takes 1 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+}
+NATIVE_FUNCTION(SetCursor) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 2) { THROW_ERROR("SetCursor takes 2 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+	//!UNKNOWN TYPE for arg1!//
+}
+NATIVE_FUNCTION(SetKeyCallback) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 2) { THROW_ERROR("SetKeyCallback takes 2 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+	//!UNKNOWN TYPE for arg1!//
+}
+NATIVE_FUNCTION(SetCharCallback) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 2) { THROW_ERROR("SetCharCallback takes 2 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+	//!UNKNOWN TYPE for arg1!//
+}
+NATIVE_FUNCTION(SetCharModsCallback) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 2) { THROW_ERROR("SetCharModsCallback takes 2 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+	//!UNKNOWN TYPE for arg1!//
+}
+NATIVE_FUNCTION(SetMouseButtonCallback) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 2) { THROW_ERROR("SetMouseButtonCallback takes 2 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+	//!UNKNOWN TYPE for arg1!//
+}
+NATIVE_FUNCTION(SetCursorPosCallback) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 2) { THROW_ERROR("SetCursorPosCallback takes 2 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+	//!UNKNOWN TYPE for arg1!//
+}
+NATIVE_FUNCTION(SetCursorEnterCallback) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 2) { THROW_ERROR("SetCursorEnterCallback takes 2 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+	//!UNKNOWN TYPE for arg1!//
+}
+NATIVE_FUNCTION(SetScrollCallback) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 2) { THROW_ERROR("SetScrollCallback takes 2 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+	//!UNKNOWN TYPE for arg1!//
+}
+NATIVE_FUNCTION(SetDropCallback) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 2) { THROW_ERROR("SetDropCallback takes 2 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+	//!UNKNOWN TYPE for arg1!//
+}
+NATIVE_FUNCTION(JoystickPresent) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 1) { THROW_ERROR("JoystickPresent takes 1 arguments."); }
+	if(!args[0]->IsNumber()) { THROW_TYPE_ERROR("jid is of type number!"); }
+	int arg0 = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+}
+NATIVE_FUNCTION(GetJoystickAxes) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 2) { THROW_ERROR("GetJoystickAxes takes 2 arguments."); }
+	if(!args[0]->IsNumber()) { THROW_TYPE_ERROR("jid is of type number!"); }
+	int arg0 = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	//!UNKNOWN TYPE for arg1!//
+}
+NATIVE_FUNCTION(GetJoystickButtons) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 2) { THROW_ERROR("GetJoystickButtons takes 2 arguments."); }
+	if(!args[0]->IsNumber()) { THROW_TYPE_ERROR("jid is of type number!"); }
+	int arg0 = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	//!UNKNOWN TYPE for arg1!//
+}
+NATIVE_FUNCTION(GetJoystickHats) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 2) { THROW_ERROR("GetJoystickHats takes 2 arguments."); }
+	if(!args[0]->IsNumber()) { THROW_TYPE_ERROR("jid is of type number!"); }
+	int arg0 = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	//!UNKNOWN TYPE for arg1!//
+}
+NATIVE_FUNCTION(GetJoystickName) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 1) { THROW_ERROR("GetJoystickName takes 1 arguments."); }
+	if(!args[0]->IsNumber()) { THROW_TYPE_ERROR("jid is of type number!"); }
+	int arg0 = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+}
+NATIVE_FUNCTION(GetJoystickGUID) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 1) { THROW_ERROR("GetJoystickGUID takes 1 arguments."); }
+	if(!args[0]->IsNumber()) { THROW_TYPE_ERROR("jid is of type number!"); }
+	int arg0 = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+}
+NATIVE_FUNCTION(SetJoystickUserPointer) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 2) { THROW_ERROR("SetJoystickUserPointer takes 2 arguments."); }
+	if(!args[0]->IsNumber()) { THROW_TYPE_ERROR("jid is of type number!"); }
+	int arg0 = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	//!UNKNOWN TYPE for arg1!//
+}
+NATIVE_FUNCTION(GetJoystickUserPointer) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 1) { THROW_ERROR("GetJoystickUserPointer takes 1 arguments."); }
+	if(!args[0]->IsNumber()) { THROW_TYPE_ERROR("jid is of type number!"); }
+	int arg0 = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+}
+NATIVE_FUNCTION(JoystickIsGamepad) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 1) { THROW_ERROR("JoystickIsGamepad takes 1 arguments."); }
+	if(!args[0]->IsNumber()) { THROW_TYPE_ERROR("jid is of type number!"); }
+	int arg0 = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+}
+NATIVE_FUNCTION(SetJoystickCallback) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 1) { THROW_ERROR("SetJoystickCallback takes 1 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+}
+NATIVE_FUNCTION(UpdateGamepadMappings) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 1) { THROW_ERROR("UpdateGamepadMappings takes 1 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+}
+NATIVE_FUNCTION(GetGamepadName) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 1) { THROW_ERROR("GetGamepadName takes 1 arguments."); }
+	if(!args[0]->IsNumber()) { THROW_TYPE_ERROR("jid is of type number!"); }
+	int arg0 = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+}
+NATIVE_FUNCTION(GetGamepadState) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 2) { THROW_ERROR("GetGamepadState takes 2 arguments."); }
+	if(!args[0]->IsNumber()) { THROW_TYPE_ERROR("jid is of type number!"); }
+	int arg0 = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	//!UNKNOWN TYPE for arg1!//
+}
+NATIVE_FUNCTION(SetClipboardString) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 2) { THROW_ERROR("SetClipboardString takes 2 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+	//!UNKNOWN TYPE for arg1!//
+}
+NATIVE_FUNCTION(GetClipboardString) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 1) { THROW_ERROR("GetClipboardString takes 1 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+}
+NATIVE_FUNCTION(GetTime) {
+	v8::Isolate* isolate = args.GetIsolate();
+	double ret = glfwGetTime();
+	RETURN(TO_NUMBER(ret));
+}
+NATIVE_FUNCTION(SetTime) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 1) { THROW_ERROR("SetTime takes 1 arguments."); }
+	if(!args[0]->IsNumber()) { THROW_TYPE_ERROR("time is of type number!"); }
+	double arg0 = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+}
+NATIVE_FUNCTION(GetTimerValue) {
+	v8::Isolate* isolate = args.GetIsolate();
+	uint64_t ret = glfwGetTimerValue();
+	RETURN(TO_NUMBER(ret));
+}
+NATIVE_FUNCTION(GetTimerFrequency) {
+	v8::Isolate* isolate = args.GetIsolate();
+	uint64_t ret = glfwGetTimerFrequency();
+	RETURN(TO_NUMBER(ret));
+}
+NATIVE_FUNCTION(MakeContextCurrent) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 1) { THROW_ERROR("MakeContextCurrent takes 1 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+}
+NATIVE_FUNCTION(GetCurrentContext) {
+	v8::Isolate* isolate = args.GetIsolate();
+	GLFWwindow* ret = glfwGetCurrentContext();
+	RETURN(TO_NUMBER(ret));
+}
+NATIVE_FUNCTION(SwapBuffers) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 1) { THROW_ERROR("SwapBuffers takes 1 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+}
+NATIVE_FUNCTION(SwapInterval) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 1) { THROW_ERROR("SwapInterval takes 1 arguments."); }
+	if(!args[0]->IsNumber()) { THROW_TYPE_ERROR("interval is of type number!"); }
+	int arg0 = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+}
+NATIVE_FUNCTION(ExtensionSupported) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 1) { THROW_ERROR("ExtensionSupported takes 1 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+}
+NATIVE_FUNCTION(GetProcAddress) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 1) { THROW_ERROR("GetProcAddress takes 1 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+}
+NATIVE_FUNCTION(VulkanSupported) {
+	v8::Isolate* isolate = args.GetIsolate();
+	int ret = glfwVulkanSupported();
+	RETURN(TO_NUMBER(ret));
+}
+NATIVE_FUNCTION(GetRequiredInstanceExtensions) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 1) { THROW_ERROR("GetRequiredInstanceExtensions takes 1 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+}
+NATIVE_FUNCTION(GetInstanceProcAddress) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 2) { THROW_ERROR("GetInstanceProcAddress takes 2 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+	//!UNKNOWN TYPE for arg1!//
+}
+NATIVE_FUNCTION(GetPhysicalDevicePresentationSupport) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 3) { THROW_ERROR("GetPhysicalDevicePresentationSupport takes 3 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+	//!UNKNOWN TYPE for arg1!//
+	//!UNKNOWN TYPE for arg2!//
+}
+NATIVE_FUNCTION(CreateWindowSurface) {
+	v8::Isolate* isolate = args.GetIsolate();
+	if(args.Length() < 4) { THROW_ERROR("CreateWindowSurface takes 4 arguments."); }
+	//!UNKNOWN TYPE for arg0!//
+	//!UNKNOWN TYPE for arg1!//
+	//!UNKNOWN TYPE for arg2!//
+	//!UNKNOWN TYPE for arg3!//
+}
+
 
 //==========================INIT==========================//
 
-void Init(v8::Local<v8::Object> exports) {
+void ExportModule(v8::Local<v8::Object> exports) {
     v8::Isolate* isolate = exports->GetIsolate();
     // Consts
 	EXPORT_CONST("VERSION_MAJOR", GLFW_VERSION_MAJOR);
@@ -314,6 +1057,125 @@ void Init(v8::Local<v8::Object> exports) {
 	EXPORT_CONST("DONT_CARE", GLFW_DONT_CARE);
 
     // Methods
-    //<FUNC-EXPORTS>
+	NODE_SET_METHOD(exports, "init", Init);
+	NODE_SET_METHOD(exports, "terminate", Terminate);
+	NODE_SET_METHOD(exports, "initHint", InitHint);
+	NODE_SET_METHOD(exports, "getVersion", GetVersion);
+	NODE_SET_METHOD(exports, "getVersionString", GetVersionString);
+	NODE_SET_METHOD(exports, "getError", GetError);
+	NODE_SET_METHOD(exports, "setErrorCallback", SetErrorCallback);
+	NODE_SET_METHOD(exports, "getMonitors", GetMonitors);
+	NODE_SET_METHOD(exports, "getPrimaryMonitor", GetPrimaryMonitor);
+	NODE_SET_METHOD(exports, "getMonitorPos", GetMonitorPos);
+	NODE_SET_METHOD(exports, "getMonitorWorkarea", GetMonitorWorkarea);
+	NODE_SET_METHOD(exports, "getMonitorPhysicalSize", GetMonitorPhysicalSize);
+	NODE_SET_METHOD(exports, "getMonitorContentScale", GetMonitorContentScale);
+	NODE_SET_METHOD(exports, "getMonitorName", GetMonitorName);
+	NODE_SET_METHOD(exports, "setMonitorUserPointer", SetMonitorUserPointer);
+	NODE_SET_METHOD(exports, "getMonitorUserPointer", GetMonitorUserPointer);
+	NODE_SET_METHOD(exports, "setMonitorCallback", SetMonitorCallback);
+	NODE_SET_METHOD(exports, "getVideoModes", GetVideoModes);
+	NODE_SET_METHOD(exports, "getVideoMode", GetVideoMode);
+	NODE_SET_METHOD(exports, "setGamma", SetGamma);
+	NODE_SET_METHOD(exports, "getGammaRamp", GetGammaRamp);
+	NODE_SET_METHOD(exports, "setGammaRamp", SetGammaRamp);
+	NODE_SET_METHOD(exports, "defaultWindowHints", DefaultWindowHints);
+	NODE_SET_METHOD(exports, "windowHint", WindowHint);
+	NODE_SET_METHOD(exports, "windowHintString", WindowHintString);
+	NODE_SET_METHOD(exports, "createWindow", CreateWindow);
+	NODE_SET_METHOD(exports, "destroyWindow", DestroyWindow);
+	NODE_SET_METHOD(exports, "windowShouldClose", WindowShouldClose);
+	NODE_SET_METHOD(exports, "setWindowShouldClose", SetWindowShouldClose);
+	NODE_SET_METHOD(exports, "setWindowTitle", SetWindowTitle);
+	NODE_SET_METHOD(exports, "setWindowIcon", SetWindowIcon);
+	NODE_SET_METHOD(exports, "getWindowPos", GetWindowPos);
+	NODE_SET_METHOD(exports, "setWindowPos", SetWindowPos);
+	NODE_SET_METHOD(exports, "getWindowSize", GetWindowSize);
+	NODE_SET_METHOD(exports, "setWindowSizeLimits", SetWindowSizeLimits);
+	NODE_SET_METHOD(exports, "setWindowAspectRatio", SetWindowAspectRatio);
+	NODE_SET_METHOD(exports, "setWindowSize", SetWindowSize);
+	NODE_SET_METHOD(exports, "getFramebufferSize", GetFramebufferSize);
+	NODE_SET_METHOD(exports, "getWindowFrameSize", GetWindowFrameSize);
+	NODE_SET_METHOD(exports, "getWindowContentScale", GetWindowContentScale);
+	NODE_SET_METHOD(exports, "getWindowOpacity", GetWindowOpacity);
+	NODE_SET_METHOD(exports, "setWindowOpacity", SetWindowOpacity);
+	NODE_SET_METHOD(exports, "iconifyWindow", IconifyWindow);
+	NODE_SET_METHOD(exports, "restoreWindow", RestoreWindow);
+	NODE_SET_METHOD(exports, "maximizeWindow", MaximizeWindow);
+	NODE_SET_METHOD(exports, "showWindow", ShowWindow);
+	NODE_SET_METHOD(exports, "hideWindow", HideWindow);
+	NODE_SET_METHOD(exports, "focusWindow", FocusWindow);
+	NODE_SET_METHOD(exports, "requestWindowAttention", RequestWindowAttention);
+	NODE_SET_METHOD(exports, "getWindowMonitor", GetWindowMonitor);
+	NODE_SET_METHOD(exports, "setWindowMonitor", SetWindowMonitor);
+	NODE_SET_METHOD(exports, "getWindowAttrib", GetWindowAttrib);
+	NODE_SET_METHOD(exports, "setWindowAttrib", SetWindowAttrib);
+	NODE_SET_METHOD(exports, "setWindowUserPointer", SetWindowUserPointer);
+	NODE_SET_METHOD(exports, "getWindowUserPointer", GetWindowUserPointer);
+	NODE_SET_METHOD(exports, "setWindowPosCallback", SetWindowPosCallback);
+	NODE_SET_METHOD(exports, "setWindowSizeCallback", SetWindowSizeCallback);
+	NODE_SET_METHOD(exports, "setWindowCloseCallback", SetWindowCloseCallback);
+	NODE_SET_METHOD(exports, "setWindowRefreshCallback", SetWindowRefreshCallback);
+	NODE_SET_METHOD(exports, "setWindowFocusCallback", SetWindowFocusCallback);
+	NODE_SET_METHOD(exports, "setWindowIconifyCallback", SetWindowIconifyCallback);
+	NODE_SET_METHOD(exports, "setWindowMaximizeCallback", SetWindowMaximizeCallback);
+	NODE_SET_METHOD(exports, "setFramebufferSizeCallback", SetFramebufferSizeCallback);
+	NODE_SET_METHOD(exports, "setWindowContentScaleCallback", SetWindowContentScaleCallback);
+	NODE_SET_METHOD(exports, "pollEvents", PollEvents);
+	NODE_SET_METHOD(exports, "waitEvents", WaitEvents);
+	NODE_SET_METHOD(exports, "waitEventsTimeout", WaitEventsTimeout);
+	NODE_SET_METHOD(exports, "postEmptyEvent", PostEmptyEvent);
+	NODE_SET_METHOD(exports, "getInputMode", GetInputMode);
+	NODE_SET_METHOD(exports, "setInputMode", SetInputMode);
+	NODE_SET_METHOD(exports, "rawMouseMotionSupported", RawMouseMotionSupported);
+	NODE_SET_METHOD(exports, "getKeyName", GetKeyName);
+	NODE_SET_METHOD(exports, "getKeyScancode", GetKeyScancode);
+	NODE_SET_METHOD(exports, "getKey", GetKey);
+	NODE_SET_METHOD(exports, "getMouseButton", GetMouseButton);
+	NODE_SET_METHOD(exports, "getCursorPos", GetCursorPos);
+	NODE_SET_METHOD(exports, "setCursorPos", SetCursorPos);
+	NODE_SET_METHOD(exports, "createCursor", CreateCursor);
+	NODE_SET_METHOD(exports, "createStandardCursor", CreateStandardCursor);
+	NODE_SET_METHOD(exports, "destroyCursor", DestroyCursor);
+	NODE_SET_METHOD(exports, "setCursor", SetCursor);
+	NODE_SET_METHOD(exports, "setKeyCallback", SetKeyCallback);
+	NODE_SET_METHOD(exports, "setCharCallback", SetCharCallback);
+	NODE_SET_METHOD(exports, "setCharModsCallback", SetCharModsCallback);
+	NODE_SET_METHOD(exports, "setMouseButtonCallback", SetMouseButtonCallback);
+	NODE_SET_METHOD(exports, "setCursorPosCallback", SetCursorPosCallback);
+	NODE_SET_METHOD(exports, "setCursorEnterCallback", SetCursorEnterCallback);
+	NODE_SET_METHOD(exports, "setScrollCallback", SetScrollCallback);
+	NODE_SET_METHOD(exports, "setDropCallback", SetDropCallback);
+	NODE_SET_METHOD(exports, "joystickPresent", JoystickPresent);
+	NODE_SET_METHOD(exports, "getJoystickAxes", GetJoystickAxes);
+	NODE_SET_METHOD(exports, "getJoystickButtons", GetJoystickButtons);
+	NODE_SET_METHOD(exports, "getJoystickHats", GetJoystickHats);
+	NODE_SET_METHOD(exports, "getJoystickName", GetJoystickName);
+	NODE_SET_METHOD(exports, "getJoystickGUID", GetJoystickGUID);
+	NODE_SET_METHOD(exports, "setJoystickUserPointer", SetJoystickUserPointer);
+	NODE_SET_METHOD(exports, "getJoystickUserPointer", GetJoystickUserPointer);
+	NODE_SET_METHOD(exports, "joystickIsGamepad", JoystickIsGamepad);
+	NODE_SET_METHOD(exports, "setJoystickCallback", SetJoystickCallback);
+	NODE_SET_METHOD(exports, "updateGamepadMappings", UpdateGamepadMappings);
+	NODE_SET_METHOD(exports, "getGamepadName", GetGamepadName);
+	NODE_SET_METHOD(exports, "getGamepadState", GetGamepadState);
+	NODE_SET_METHOD(exports, "setClipboardString", SetClipboardString);
+	NODE_SET_METHOD(exports, "getClipboardString", GetClipboardString);
+	NODE_SET_METHOD(exports, "getTime", GetTime);
+	NODE_SET_METHOD(exports, "setTime", SetTime);
+	NODE_SET_METHOD(exports, "getTimerValue", GetTimerValue);
+	NODE_SET_METHOD(exports, "getTimerFrequency", GetTimerFrequency);
+	NODE_SET_METHOD(exports, "makeContextCurrent", MakeContextCurrent);
+	NODE_SET_METHOD(exports, "getCurrentContext", GetCurrentContext);
+	NODE_SET_METHOD(exports, "swapBuffers", SwapBuffers);
+	NODE_SET_METHOD(exports, "swapInterval", SwapInterval);
+	NODE_SET_METHOD(exports, "extensionSupported", ExtensionSupported);
+	NODE_SET_METHOD(exports, "getProcAddress", GetProcAddress);
+	NODE_SET_METHOD(exports, "vulkanSupported", VulkanSupported);
+	NODE_SET_METHOD(exports, "getRequiredInstanceExtensions", GetRequiredInstanceExtensions);
+	NODE_SET_METHOD(exports, "getInstanceProcAddress", GetInstanceProcAddress);
+	NODE_SET_METHOD(exports, "getPhysicalDevicePresentationSupport", GetPhysicalDevicePresentationSupport);
+	NODE_SET_METHOD(exports, "createWindowSurface", CreateWindowSurface);
+
 }
-NODE_MODULE(NODE_GYP_MODULE_NAME, Init);
+NODE_MODULE(NODE_GYP_MODULE_NAME, ExportModule);

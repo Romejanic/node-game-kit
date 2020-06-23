@@ -17,11 +17,11 @@
 
 //==========================INIT==========================//
 
-void Init(v8::Local<v8::Object> exports) {
+void ExportModule(v8::Local<v8::Object> exports) {
     v8::Isolate* isolate = exports->GetIsolate();
     // Consts
     //<CONSTANTS>
     // Methods
     //<FUNC-EXPORTS>
 }
-NODE_MODULE(NODE_GYP_MODULE_NAME, Init);
+NODE_MODULE(NODE_GYP_MODULE_NAME, ExportModule);
