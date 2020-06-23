@@ -1,0 +1,6 @@
+{
+    "C_Cpp.default.includePath": [
+        "~/.node-gyp/10.15.0/include/node/",
+        "include"
+    ]
+}

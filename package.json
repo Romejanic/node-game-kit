@@ -18,5 +18,8 @@
         "gen-src": "node gen/gen-all.js"
     },
     "main": "index.js",
-    "dependencies": {}
+    "dependencies": {},
+    "devDependencies": {
+        "node-gyp": "^7.0.0"
+    }
 }

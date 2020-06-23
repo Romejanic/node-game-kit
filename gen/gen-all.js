@@ -1,7 +1,7 @@
 const genSources = require("./source-gen");
 
 let headerFiles = [
-    "", "GLFW"
+    "include/GLFW/glfw3.h", "GLFW"
 ];
 
 (async function() {
