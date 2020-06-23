@@ -17,8 +17,5 @@
         "test": "node test.js"
     },
     "main": "index.js",
-    "dependencies": {},
-    "devDependencies": {
-        "node-gyp": "^7.0.0"
-    }
+    "dependencies": {}
 }
