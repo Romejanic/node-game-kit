@@ -21,9 +21,9 @@ module.exports = async function(path, prefix) {
                 returnType,
                 arguments: []
             };
-            let arguments = trimmed.substring(trimmed.indexOf("(")+1,trimmed.indexOf(")")).split(", ");
-            if(arguments == "void") continue; // skip no arguments
-            for(let argStr of arguments) {
+            let args = trimmed.substring(trimmed.indexOf("(")+1,trimmed.indexOf(")")).split(", ");
+            if(args == "void") continue; // skip no arguments
+            for(let argStr of args) {
                 let type = argStr.substring(0, argStr.lastIndexOf(" "));
                 let name = argStr.substring(argStr.lastIndexOf(" ")+1);
                 methods[functionName].arguments.push({
