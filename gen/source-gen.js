@@ -1,5 +1,7 @@
 const fs = require("fs").promises;
 
+const SRC_TEMPLATE = require("fs").readFileSync("src/_template.cpp").toString();
+
 module.exports = async function(path, prefix) {
     let lines = (await fs.readFile(path)).toString().split("\n");
     //
@@ -34,6 +36,29 @@ module.exports = async function(path, prefix) {
     }
     // debug output
     await fs.writeFile(`debug_${prefix}_members.json`, JSON.stringify({ consts, methods }, null, 4));
-    //
-
+    // generate source file
+    let src = SRC_TEMPLATE.split("\n");
+    for(let i in src) {
+        let line = src[i].trim();
+        switch(line) {
+            case "//<INCLUDE-HEADER>":
+                src[i] = `#include <${path.substring("include/".length)}>`;
+                break;
+            case "//<CONSTANTS>":
+                let constStr = "";
+                for(let c of consts) {
+                    constStr += `\tEXPORT_CONST("${c.substring(c.indexOf("_")+1)}", ${c});\n`;
+                }
+                src[i] = constStr;
+                break;
+            case "//<FUNC-EXPORTS>":
+                
+                break;
+            default:
+                continue; // skip line
+        }
+    }
+    // write source to file
+    src = src.join("\n");
+    await fs.writeFile(`./src/${prefix.toLowerCase()}.cpp`, src);
 };
