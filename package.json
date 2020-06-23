@@ -12,12 +12,13 @@
         "url": "https://github.com/Romejanic/node-opengl.git"
     },
     "scripts": {
-        
+        "install": "node-gyp rebuild",
+        "build": "node-gyp rebuild",
+        "test": "node test.js"
     },
-    "dependencies": {
-        
-    },
+    "main": "index.js",
+    "dependencies": {},
     "devDependencies": {
-        
+        "node-gyp": "^7.0.0"
     }
 }
