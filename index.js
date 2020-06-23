@@ -1,11 +1,11 @@
 function getModule(name) {
     try {
-        return require("./build/Release/" + name);
+        return require("./build/Release/" + name + ".node");
     } catch(e) {
-        return require("./build/Debug/" + name);
+        return require("./build/Debug/" + name + ".node");
     }
 }
 
 module.exports = {
-    Test: getModule("test")
+    GLFW: getModule("glfw")
 };

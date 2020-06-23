@@ -1,4 +1,6 @@
-const { Test } = require("./index");
+const { GLFW } = require("./index");
 
-console.log(Test.whoAmI());
-console.log(Test.testing);
+GLFW.init();
+GLFW.terminate();
+
+console.log(GLFW.VERSION_MAJOR, GLFW.VERSION_MINOR);
