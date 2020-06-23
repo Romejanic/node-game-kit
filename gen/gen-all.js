@@ -6,7 +6,8 @@ let headerFiles = [
 
 (async function() {
     for(let i = 0; i < headerFiles.length; i += 2) {
-        console.log("Generating " + headerFiles[i+1] + " (" + headerFiles[i] + ")...");
+        process.stdout.write("Generating " + headerFiles[i+1] + " (" + headerFiles[i] + ")... ");
         await genSources(headerFiles[0], headerFiles[1]);
+        console.log("Done!");
     }
 })().catch(console.error);
