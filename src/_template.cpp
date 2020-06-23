@@ -6,7 +6,7 @@
  * Instead, you should run:
  *  npm run gen-src
  * 
- * to automatically regenerated this file based on the associated
+ * to automatically regenerate this file based on the associated
  * header file.
  */
 
