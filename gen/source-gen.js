@@ -33,5 +33,5 @@ module.exports = async function(path, prefix) {
         }
     }
     // debug output
-    await fs.writeFile(path + "_export.json", JSON.stringify({ consts, methods }, null, 4));
+    await fs.writeFile(`debug_${prefix}_members.json`, JSON.stringify({ consts, methods }, null, 4));
 };

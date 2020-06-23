@@ -105,4 +105,4 @@ dist
 .tern-port
 
 # Generated debug files
-*_export.json
+*_members.json
