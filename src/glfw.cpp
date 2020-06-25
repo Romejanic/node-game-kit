@@ -16,17 +16,6 @@
 
 //==========================STRUCTS==========================//
 #pragma region
-GLFWvidmode* _toGLFWvidmode(v8::Local<v8::Object> arg) {
-	v8::Isolate* isolate = arg->GetIsolate();
-	GLFWvidmode* ret = (GLFWvidmode*)malloc(sizeof(GLFWvidmode));
-	ret->width = arg->Get(TO_STRING("width"))->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
-	ret->height = arg->Get(TO_STRING("height"))->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
-	ret->redBits = arg->Get(TO_STRING("redBits"))->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
-	ret->greenBits = arg->Get(TO_STRING("greenBits"))->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
-	ret->blueBits = arg->Get(TO_STRING("blueBits"))->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
-	ret->refreshRate = arg->Get(TO_STRING("refreshRate"))->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
-	return ret;
-}
 v8::Local<v8::Object> _fromGLFWvidmode(const GLFWvidmode* arg) {
 	v8::Isolate* isolate = v8::Isolate::GetCurrent();
 	v8::Local<v8::Object> ret = v8::Object::New(isolate);
@@ -41,43 +30,43 @@ v8::Local<v8::Object> _fromGLFWvidmode(const GLFWvidmode* arg) {
 GLFWgammaramp* _toGLFWgammaramp(v8::Local<v8::Object> arg) {
 	v8::Isolate* isolate = arg->GetIsolate();
 	GLFWgammaramp* ret = (GLFWgammaramp*)malloc(sizeof(GLFWgammaramp));
-	ret->red = arg->Get(TO_STRING("red"))->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
-	ret->green = arg->Get(TO_STRING("green"))->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
-	ret->blue = arg->Get(TO_STRING("blue"))->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	v8::Local<v8::String> redKey = TO_STRING("red");
+	v8::Local<v8::String> greenKey = TO_STRING("green");
+	v8::Local<v8::String> blueKey = TO_STRING("blue");
+	if(!arg->Get(redKey)->IsUint16Array()) { free(&ret); THROW_TYPE_ERROR("GLFWgammaramp.red is of type Uint16Array!"); }
+	if(!arg->Get(greenKey)->IsUint16Array()) { free(&ret); THROW_TYPE_ERROR("GLFWgammaramp.green is of type Uint16Array!"); }
+	if(!arg->Get(blueKey)->IsUint16Array()) { free(&ret); THROW_TYPE_ERROR("GLFWgammaramp.blue is of type Uint16Array!"); }
+	ret->red = static_cast<unsigned short*>(arg->Get(redKey).As<v8::Uint8Array>()->Buffer()->GetContents().Data());
+	ret->green = static_cast<unsigned short*>(arg->Get(greenKey).As<v8::Uint8Array>()->Buffer()->GetContents().Data());
+	ret->blue = static_cast<unsigned short*>(arg->Get(blueKey).As<v8::Uint8Array>()->Buffer()->GetContents().Data());
 	ret->size = arg->Get(TO_STRING("size"))->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
 	return ret;
 }
 v8::Local<v8::Object> _fromGLFWgammaramp(const GLFWgammaramp* arg) {
 	v8::Isolate* isolate = v8::Isolate::GetCurrent();
 	v8::Local<v8::Object> ret = v8::Object::New(isolate);
-	ret->Set(TO_STRING("red"), TO_NUMBER(arg->red));
-	ret->Set(TO_STRING("green"), TO_NUMBER(arg->green));
-	ret->Set(TO_STRING("blue"), TO_NUMBER(arg->blue));
+	v8::Local<v8::ArrayBuffer> redArr = v8::ArrayBuffer::New(isolate, arg->red, arg->size * sizeof(unsigned short));
+	v8::Local<v8::ArrayBuffer> greenArr = v8::ArrayBuffer::New(isolate, arg->green, arg->size * sizeof(unsigned short));
+	v8::Local<v8::ArrayBuffer> blueArr = v8::ArrayBuffer::New(isolate, arg->blue, arg->size * sizeof(unsigned short));
+	ret->Set(TO_STRING("red"), v8::Uint16Array::New(redArr, 0, arg->size));
+	ret->Set(TO_STRING("green"), v8::Uint16Array::New(greenArr, 0, arg->size));
+	ret->Set(TO_STRING("blue"), v8::Uint16Array::New(blueArr, 0, arg->size));
 	ret->Set(TO_STRING("size"), TO_NUMBER(arg->size));
 	return ret;
 }
-GLFWimage* _toGLFWimage(v8::Local<v8::Object> arg) {
+bool _toGLFWimage(GLFWimage* ret, v8::Local<v8::Object> arg) {
 	v8::Isolate* isolate = arg->GetIsolate();
-	GLFWimage* ret = (GLFWimage*)malloc(sizeof(GLFWimage));
 	ret->width = arg->Get(TO_STRING("width"))->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
 	ret->height = arg->Get(TO_STRING("height"))->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
-	ret->pixels = arg->Get(TO_STRING("pixels"))->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
-	return ret;
-}
-v8::Local<v8::Object> _fromGLFWimage(const GLFWimage* arg) {
-	v8::Isolate* isolate = v8::Isolate::GetCurrent();
-	v8::Local<v8::Object> ret = v8::Object::New(isolate);
-	ret->Set(TO_STRING("width"), TO_NUMBER(arg->width));
-	ret->Set(TO_STRING("height"), TO_NUMBER(arg->height));
-	ret->Set(TO_STRING("pixels"), TO_NUMBER(arg->pixels));
-	return ret;
-}
-GLFWgamepadstate* _toGLFWgamepadstate(v8::Local<v8::Object> arg) {
-	v8::Isolate* isolate = arg->GetIsolate();
-	GLFWgamepadstate* ret = (GLFWgamepadstate*)malloc(sizeof(GLFWgamepadstate));
-	ret->buttons[15] = arg->Get(TO_STRING("buttons[15]"))->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
-	ret->axes[6] = arg->Get(TO_STRING("axes[6]"))->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
-	return ret;
+	v8::Local<v8::String> pixelKey = TO_STRING("pixels");
+	if(!arg->Get(pixelKey)->IsUint8Array()) return false;
+	v8::Local<v8::Uint8Array> pixelArr = arg->Get(pixelKey).As<v8::Uint8Array>();
+	if(!pixelArr->Length() != ret->width * ret->height * 4) return false;
+	uint8_t* data = static_cast<uint8_t*>(pixelArr->Buffer()->GetContents().Data());
+	for(int i = 0; i < pixelArr->Length(); i++) {
+		ret->pixels[i] = data[i];
+	}
+	return true;
 }
 v8::Local<v8::Object> _fromGLFWgamepadstate(const GLFWgamepadstate* arg) {
 	v8::Isolate* isolate = v8::Isolate::GetCurrent();
@@ -118,11 +107,13 @@ NATIVE_FUNCTION(InitHint) {
 }
 NATIVE_FUNCTION(GetVersion) {
 	v8::Isolate* isolate = args.GetIsolate();
-	if(args.Length() < 3) { THROW_ERROR("GetVersion takes 3 arguments."); }
-	//!UNKNOWN TYPE for major (type: 'int*')!//
-	//!UNKNOWN TYPE for minor (type: 'int*')!//
-	//!UNKNOWN TYPE for rev (type: 'int*')!//
-	glfwGetVersion(major, minor, rev);
+	v8::Local<v8::Array> arr = v8::Array::New(isolate, 3);
+	int major, minor, rev;
+	glfwGetVersion(&major, &minor, &rev);
+	arr->Set(0, TO_NUMBER(major));
+	arr->Set(1, TO_NUMBER(minor));
+	arr->Set(2, TO_NUMBER(rev));
+	RETURN(arr);
 }
 NATIVE_FUNCTION(GetVersionString) {
 	v8::Isolate* isolate = args.GetIsolate();
@@ -131,23 +122,30 @@ NATIVE_FUNCTION(GetVersionString) {
 }
 NATIVE_FUNCTION(GetError) {
 	v8::Isolate* isolate = args.GetIsolate();
-	if(args.Length() < 1) { THROW_ERROR("GetError takes 1 arguments."); }
-	//!UNKNOWN TYPE for description (type: 'const char**')!//
-	int ret = glfwGetError(description);
-	RETURN(TO_NUMBER(ret));
+	const char* desc;
+	int ret = glfwGetError(&desc);
+	v8::Local<v8::Object> obj = v8::Object::New(isolate);
+	obj->Set(TO_STRING("code"), TO_NUMBER(ret));
+	obj->Set(TO_STRING("desc"), TO_STRING(desc));
+	RETURN(obj);
 }
 NATIVE_FUNCTION(SetErrorCallback) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 1) { THROW_ERROR("SetErrorCallback takes 1 arguments."); }
 	//!UNKNOWN TYPE for callback (type: 'GLFWerrorfun')!//
-	glfwSetErrorCallback(callback);
+	// glfwSetErrorCallback(callback);
+	THROW_ERROR("Not implemented"); // TODO
 }
 NATIVE_FUNCTION(GetMonitors) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 1) { THROW_ERROR("GetMonitors takes 1 arguments."); }
-	//!UNKNOWN TYPE for count (type: 'int*')!//
-	GLFWmonitor** ret = glfwGetMonitors(count);
-	//!UNKNOWN RETURN TYPE for glfwGetMonitors//
+	int count;
+	GLFWmonitor** ret = glfwGetMonitors(&count);
+	v8::Local<v8::Array> arr = v8::Array::New(isolate, count);
+	for(int i = 0; i < count; i++) {
+		arr->Set(i, TO_NUMBER((uint64_t)ret[i]));
+	}
+	RETURN(arr);
 }
 NATIVE_FUNCTION(GetPrimaryMonitor) {
 	v8::Isolate* isolate = args.GetIsolate();
@@ -156,49 +154,61 @@ NATIVE_FUNCTION(GetPrimaryMonitor) {
 }
 NATIVE_FUNCTION(GetMonitorPos) {
 	v8::Isolate* isolate = args.GetIsolate();
-	if(args.Length() < 3) { THROW_ERROR("GetMonitorPos takes 3 arguments."); }
+	if(args.Length() < 1) { THROW_ERROR("GetMonitorPos takes 1 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("monitor is of type pointer!"); }
 	GLFWmonitor* monitor;
 	if(args[0]->IsNullOrUndefined()) { monitor = NULL; }
 	else { monitor = reinterpret_cast<GLFWmonitor*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	//!UNKNOWN TYPE for xpos (type: 'int*')!//
-	//!UNKNOWN TYPE for ypos (type: 'int*')!//
-	glfwGetMonitorPos(monitor, xpos, ypos);
+	int xpos, ypos;
+	glfwGetMonitorPos(monitor, &xpos, &ypos);
+	v8::Local<v8::Object> obj = v8::Object::New(isolate);
+	obj->Set(TO_STRING("xpos"), TO_NUMBER(xpos));
+	obj->Set(TO_STRING("ypos"), TO_NUMBER(ypos));
+	RETURN(obj);
 }
 NATIVE_FUNCTION(GetMonitorWorkarea) {
 	v8::Isolate* isolate = args.GetIsolate();
-	if(args.Length() < 5) { THROW_ERROR("GetMonitorWorkarea takes 5 arguments."); }
+	if(args.Length() < 1) { THROW_ERROR("GetMonitorWorkarea takes 1 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("monitor is of type pointer!"); }
 	GLFWmonitor* monitor;
 	if(args[0]->IsNullOrUndefined()) { monitor = NULL; }
 	else { monitor = reinterpret_cast<GLFWmonitor*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	//!UNKNOWN TYPE for xpos (type: 'int*')!//
-	//!UNKNOWN TYPE for ypos (type: 'int*')!//
-	//!UNKNOWN TYPE for width (type: 'int*')!//
-	//!UNKNOWN TYPE for height (type: 'int*')!//
-	glfwGetMonitorWorkarea(monitor, xpos, ypos, width, height);
+	int xpos, ypos, width, height;
+	glfwGetMonitorWorkarea(monitor, &xpos, &ypos, &width, &height);
+	v8::Local<v8::Object> obj = v8::Object::New(isolate);
+	obj->Set(TO_STRING("xpos"), TO_NUMBER(xpos));
+	obj->Set(TO_STRING("ypos"), TO_NUMBER(ypos));
+	obj->Set(TO_STRING("width"), TO_NUMBER(width));
+	obj->Set(TO_STRING("height"), TO_NUMBER(height));
+	RETURN(obj);
 }
 NATIVE_FUNCTION(GetMonitorPhysicalSize) {
 	v8::Isolate* isolate = args.GetIsolate();
-	if(args.Length() < 3) { THROW_ERROR("GetMonitorPhysicalSize takes 3 arguments."); }
+	if(args.Length() < 1) { THROW_ERROR("GetMonitorPhysicalSize takes 1 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("monitor is of type pointer!"); }
 	GLFWmonitor* monitor;
 	if(args[0]->IsNullOrUndefined()) { monitor = NULL; }
 	else { monitor = reinterpret_cast<GLFWmonitor*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	//!UNKNOWN TYPE for widthMM (type: 'int*')!//
-	//!UNKNOWN TYPE for heightMM (type: 'int*')!//
-	glfwGetMonitorPhysicalSize(monitor, widthMM, heightMM);
+	int widthMM, heightMM;
+	glfwGetMonitorPhysicalSize(monitor, &widthMM, &heightMM);
+	v8::Local<v8::Object> obj = v8::Object::New(isolate);
+	obj->Set(TO_STRING("widthMM"), TO_NUMBER(widthMM));
+	obj->Set(TO_STRING("heightMM"), TO_NUMBER(heightMM));
+	RETURN(obj);
 }
 NATIVE_FUNCTION(GetMonitorContentScale) {
 	v8::Isolate* isolate = args.GetIsolate();
-	if(args.Length() < 3) { THROW_ERROR("GetMonitorContentScale takes 3 arguments."); }
+	if(args.Length() < 1) { THROW_ERROR("GetMonitorContentScale takes 1 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("monitor is of type pointer!"); }
 	GLFWmonitor* monitor;
 	if(args[0]->IsNullOrUndefined()) { monitor = NULL; }
 	else { monitor = reinterpret_cast<GLFWmonitor*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	//!UNKNOWN TYPE for xscale (type: 'float*')!//
-	//!UNKNOWN TYPE for yscale (type: 'float*')!//
-	glfwGetMonitorContentScale(monitor, xscale, yscale);
+	float xscale, yscale;
+	glfwGetMonitorContentScale(monitor, &xscale, &yscale);
+	v8::Local<v8::Object> obj = v8::Object::New(isolate);
+	obj->Set(TO_STRING("xscale"), TO_NUMBER(xscale));
+	obj->Set(TO_STRING("yscale"), TO_NUMBER(yscale));
+	RETURN(obj);
 }
 NATIVE_FUNCTION(GetMonitorName) {
 	v8::Isolate* isolate = args.GetIsolate();
@@ -237,18 +247,23 @@ NATIVE_FUNCTION(SetMonitorCallback) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 1) { THROW_ERROR("SetMonitorCallback takes 1 arguments."); }
 	//!UNKNOWN TYPE for callback (type: 'GLFWmonitorfun')!//
-	glfwSetMonitorCallback(callback);
+	// glfwSetMonitorCallback(callback);
+	THROW_ERROR("Not implemented"); // TODO
 }
 NATIVE_FUNCTION(GetVideoModes) {
 	v8::Isolate* isolate = args.GetIsolate();
-	if(args.Length() < 2) { THROW_ERROR("GetVideoModes takes 2 arguments."); }
+	if(args.Length() < 1) { THROW_ERROR("GetVideoModes takes 1 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("monitor is of type pointer!"); }
 	GLFWmonitor* monitor;
 	if(args[0]->IsNullOrUndefined()) { monitor = NULL; }
 	else { monitor = reinterpret_cast<GLFWmonitor*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	//!UNKNOWN TYPE for count (type: 'int*')!//
-	const GLFWvidmode* ret = glfwGetVideoModes(monitor, count);
-	RETURN(_fromGLFWvidmode(ret));
+	int count;
+	const GLFWvidmode* ret = glfwGetVideoModes(monitor, &count);
+	v8::Local<v8::Array> arr = v8::Array::New(isolate, count);
+	for(int i = 0; i < count; i++) {
+		arr->Set(i, _fromGLFWvidmode(&ret[i]));
+	}
+	RETURN(arr);
 }
 NATIVE_FUNCTION(GetVideoMode) {
 	v8::Isolate* isolate = args.GetIsolate();
@@ -288,8 +303,10 @@ NATIVE_FUNCTION(SetGammaRamp) {
 	GLFWmonitor* monitor;
 	if(args[0]->IsNullOrUndefined()) { monitor = NULL; }
 	else { monitor = reinterpret_cast<GLFWmonitor*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	//!UNKNOWN TYPE for ramp (type: 'const GLFWgammaramp*')!//
+	if(!args[1]->IsObject()) { THROW_TYPE_ERROR("ramp is of type object!"); }
+	const GLFWgammaramp* ramp = _toGLFWgammaramp(args[1]);
 	glfwSetGammaRamp(monitor, ramp);
+	free(&ramp); // free allocated GLFWgammaramp in _toGLFWgammaramp()
 }
 NATIVE_FUNCTION(DefaultWindowHints) {
 	glfwDefaultWindowHints();
@@ -375,26 +392,41 @@ NATIVE_FUNCTION(SetWindowTitle) {
 }
 NATIVE_FUNCTION(SetWindowIcon) {
 	v8::Isolate* isolate = args.GetIsolate();
-	if(args.Length() < 3) { THROW_ERROR("SetWindowIcon takes 3 arguments."); }
+	if(args.Length() < 2) { THROW_ERROR("SetWindowIcon takes 2 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
 	GLFWwindow* window;
 	if(args[0]->IsNullOrUndefined()) { window = NULL; }
 	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	if(!args[1]->IsNumber()) { THROW_TYPE_ERROR("count is of type number!"); }
-	int count = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
-	//!UNKNOWN TYPE for images (type: 'const GLFWimage*')!//
+	if(!args[1]->IsArray()) { THROW_TYPE_ERROR("images is of type array!"); }
+	v8::Local<v8::Array> arr = args[1].As<v8::Array>();
+	int count = arr->Length();
+	GLFWimage* images = (GLFWimage*)malloc(sizeof(GLFWimage) * count);
+	for(int i = 0; i < count; i++) {
+		if(!arr->Get(i)->IsObject()) { free(&images); THROW_TYPE_ERROR("Each image in images should be an object!"); }
+		v8::Local<v8::Object> imageObj = arr->Get(i).As<v8::Object>();
+		if(!_toGLFWimage(&images[i], arr->Get(i))) {
+			THROW_TYPE_ERROR("Error parsing GLFWimage object. Make sure the 'pixels' field is a Uint8Array and is width*height*4 in length.");
+			images[i].width = 0;
+			images[i].height = 0;
+			images[i].pixels = NULL;
+		}
+	}
 	glfwSetWindowIcon(window, count, images);
+	free(&images);
 }
 NATIVE_FUNCTION(GetWindowPos) {
 	v8::Isolate* isolate = args.GetIsolate();
-	if(args.Length() < 3) { THROW_ERROR("GetWindowPos takes 3 arguments."); }
+	if(args.Length() < 1) { THROW_ERROR("GetWindowPos takes 1 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
 	GLFWwindow* window;
 	if(args[0]->IsNullOrUndefined()) { window = NULL; }
 	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	//!UNKNOWN TYPE for xpos (type: 'int*')!//
-	//!UNKNOWN TYPE for ypos (type: 'int*')!//
-	glfwGetWindowPos(window, xpos, ypos);
+	int xpos, ypos;
+	glfwGetWindowPos(window, &xpos, &ypos);
+	v8::Local<v8::Object> obj = v8::Object::New(isolate);
+	obj->Set(TO_STRING("xpos"), TO_NUMBER(xpos));
+	obj->Set(TO_STRING("ypos"), TO_NUMBER(ypos));
+	RETURN(obj);
 }
 NATIVE_FUNCTION(SetWindowPos) {
 	v8::Isolate* isolate = args.GetIsolate();
@@ -411,14 +443,17 @@ NATIVE_FUNCTION(SetWindowPos) {
 }
 NATIVE_FUNCTION(GetWindowSize) {
 	v8::Isolate* isolate = args.GetIsolate();
-	if(args.Length() < 3) { THROW_ERROR("GetWindowSize takes 3 arguments."); }
+	if(args.Length() < 1) { THROW_ERROR("GetWindowSize takes 1 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
 	GLFWwindow* window;
 	if(args[0]->IsNullOrUndefined()) { window = NULL; }
 	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	//!UNKNOWN TYPE for width (type: 'int*')!//
-	//!UNKNOWN TYPE for height (type: 'int*')!//
-	glfwGetWindowSize(window, width, height);
+	int width, height;
+	glfwGetWindowSize(window, &width, &height);
+	v8::Local<v8::Object> obj = v8::Object::New(isolate);
+	obj->Set(TO_STRING("width"), TO_NUMBER(width));
+	obj->Set(TO_STRING("height"), TO_NUMBER(height));
+	RETURN(obj);
 }
 NATIVE_FUNCTION(SetWindowSizeLimits) {
 	v8::Isolate* isolate = args.GetIsolate();
@@ -465,38 +500,47 @@ NATIVE_FUNCTION(SetWindowSize) {
 }
 NATIVE_FUNCTION(GetFramebufferSize) {
 	v8::Isolate* isolate = args.GetIsolate();
-	if(args.Length() < 3) { THROW_ERROR("GetFramebufferSize takes 3 arguments."); }
+	if(args.Length() < 1) { THROW_ERROR("GetFramebufferSize takes 1 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
 	GLFWwindow* window;
 	if(args[0]->IsNullOrUndefined()) { window = NULL; }
 	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	//!UNKNOWN TYPE for width (type: 'int*')!//
-	//!UNKNOWN TYPE for height (type: 'int*')!//
-	glfwGetFramebufferSize(window, width, height);
+	int width, height;
+	glfwGetFramebufferSize(window, &width, &height);
+	v8::Local<v8::Object> obj = v8::Object::New(isolate);
+	obj->Set(TO_STRING("width"), TO_NUMBER(width));
+	obj->Set(TO_STRING("height"), TO_NUMBER(height));
+	RETURN(obj);
 }
 NATIVE_FUNCTION(GetWindowFrameSize) {
 	v8::Isolate* isolate = args.GetIsolate();
-	if(args.Length() < 5) { THROW_ERROR("GetWindowFrameSize takes 5 arguments."); }
+	if(args.Length() < 1) { THROW_ERROR("GetWindowFrameSize takes 1 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
 	GLFWwindow* window;
 	if(args[0]->IsNullOrUndefined()) { window = NULL; }
 	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	//!UNKNOWN TYPE for left (type: 'int*')!//
-	//!UNKNOWN TYPE for top (type: 'int*')!//
-	//!UNKNOWN TYPE for right (type: 'int*')!//
-	//!UNKNOWN TYPE for bottom (type: 'int*')!//
-	glfwGetWindowFrameSize(window, left, top, right, bottom);
+	int left, top, right, bottom;
+	glfwGetWindowFrameSize(window, &left, &top, &right, &bottom);
+	v8::Local<v8::Object> obj = v8::Object::New(isolate);
+	obj->Set(TO_STRING("left"), TO_NUMBER(left));
+	obj->Set(TO_STRING("top"), TO_NUMBER(top));
+	obj->Set(TO_STRING("right"), TO_NUMBER(right));
+	obj->Set(TO_STRING("bottom"), TO_NUMBER(bottom));
+	RETURN(obj);
 }
 NATIVE_FUNCTION(GetWindowContentScale) {
 	v8::Isolate* isolate = args.GetIsolate();
-	if(args.Length() < 3) { THROW_ERROR("GetWindowContentScale takes 3 arguments."); }
+	if(args.Length() < 1) { THROW_ERROR("GetWindowContentScale takes 1 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
 	GLFWwindow* window;
 	if(args[0]->IsNullOrUndefined()) { window = NULL; }
 	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	//!UNKNOWN TYPE for xscale (type: 'float*')!//
-	//!UNKNOWN TYPE for yscale (type: 'float*')!//
-	glfwGetWindowContentScale(window, xscale, yscale);
+	float xscale, yscale;
+	glfwGetWindowContentScale(window, &xscale, &yscale);
+	v8::Local<v8::Object> obj = v8::Object::New(isolate);
+	obj->Set(TO_STRING("xscale"), TO_NUMBER(xscale));
+	obj->Set(TO_STRING("yscale"), TO_NUMBER(yscale));
+	RETURN(obj);
 }
 NATIVE_FUNCTION(GetWindowOpacity) {
 	v8::Isolate* isolate = args.GetIsolate();
@@ -671,7 +715,8 @@ NATIVE_FUNCTION(SetWindowPosCallback) {
 	if(args[0]->IsNullOrUndefined()) { window = NULL; }
 	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
 	//!UNKNOWN TYPE for callback (type: 'GLFWwindowposfun')!//
-	glfwSetWindowPosCallback(window, callback);
+	// glfwSetWindowPosCallback(window, callback);
+	THROW_ERROR("Not implemented."); // TODO
 }
 NATIVE_FUNCTION(SetWindowSizeCallback) {
 	v8::Isolate* isolate = args.GetIsolate();
@@ -681,7 +726,8 @@ NATIVE_FUNCTION(SetWindowSizeCallback) {
 	if(args[0]->IsNullOrUndefined()) { window = NULL; }
 	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
 	//!UNKNOWN TYPE for callback (type: 'GLFWwindowsizefun')!//
-	glfwSetWindowSizeCallback(window, callback);
+	// glfwSetWindowSizeCallback(window, callback);
+	THROW_ERROR("Not implemented."); // TODO
 }
 NATIVE_FUNCTION(SetWindowCloseCallback) {
 	v8::Isolate* isolate = args.GetIsolate();
@@ -691,7 +737,8 @@ NATIVE_FUNCTION(SetWindowCloseCallback) {
 	if(args[0]->IsNullOrUndefined()) { window = NULL; }
 	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
 	//!UNKNOWN TYPE for callback (type: 'GLFWwindowclosefun')!//
-	glfwSetWindowCloseCallback(window, callback);
+	// glfwSetWindowCloseCallback(window, callback);
+	THROW_ERROR("Not implemented"); // TODO
 }
 NATIVE_FUNCTION(SetWindowRefreshCallback) {
 	v8::Isolate* isolate = args.GetIsolate();
@@ -701,7 +748,8 @@ NATIVE_FUNCTION(SetWindowRefreshCallback) {
 	if(args[0]->IsNullOrUndefined()) { window = NULL; }
 	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
 	//!UNKNOWN TYPE for callback (type: 'GLFWwindowrefreshfun')!//
-	glfwSetWindowRefreshCallback(window, callback);
+	// glfwSetWindowRefreshCallback(window, callback);
+	THROW_ERROR("Not implemented."); // TODO
 }
 NATIVE_FUNCTION(SetWindowFocusCallback) {
 	v8::Isolate* isolate = args.GetIsolate();
@@ -711,7 +759,8 @@ NATIVE_FUNCTION(SetWindowFocusCallback) {
 	if(args[0]->IsNullOrUndefined()) { window = NULL; }
 	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
 	//!UNKNOWN TYPE for callback (type: 'GLFWwindowfocusfun')!//
-	glfwSetWindowFocusCallback(window, callback);
+	// glfwSetWindowFocusCallback(window, callback);
+	THROW_ERROR("Not implemented."); // TODO
 }
 NATIVE_FUNCTION(SetWindowIconifyCallback) {
 	v8::Isolate* isolate = args.GetIsolate();
@@ -721,7 +770,8 @@ NATIVE_FUNCTION(SetWindowIconifyCallback) {
 	if(args[0]->IsNullOrUndefined()) { window = NULL; }
 	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
 	//!UNKNOWN TYPE for callback (type: 'GLFWwindowiconifyfun')!//
-	glfwSetWindowIconifyCallback(window, callback);
+	// glfwSetWindowIconifyCallback(window, callback);
+	THROW_ERROR("Not implemented."); // TODO
 }
 NATIVE_FUNCTION(SetWindowMaximizeCallback) {
 	v8::Isolate* isolate = args.GetIsolate();
@@ -731,7 +781,8 @@ NATIVE_FUNCTION(SetWindowMaximizeCallback) {
 	if(args[0]->IsNullOrUndefined()) { window = NULL; }
 	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
 	//!UNKNOWN TYPE for callback (type: 'GLFWwindowmaximizefun')!//
-	glfwSetWindowMaximizeCallback(window, callback);
+	// glfwSetWindowMaximizeCallback(window, callback);
+	THROW_ERROR("Not implemented."); // TODO
 }
 NATIVE_FUNCTION(SetFramebufferSizeCallback) {
 	v8::Isolate* isolate = args.GetIsolate();
@@ -741,7 +792,8 @@ NATIVE_FUNCTION(SetFramebufferSizeCallback) {
 	if(args[0]->IsNullOrUndefined()) { window = NULL; }
 	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
 	//!UNKNOWN TYPE for callback (type: 'GLFWframebuffersizefun')!//
-	glfwSetFramebufferSizeCallback(window, callback);
+	// glfwSetFramebufferSizeCallback(window, callback);
+	THROW_ERROR("Not implemented."); // TODO
 }
 NATIVE_FUNCTION(SetWindowContentScaleCallback) {
 	v8::Isolate* isolate = args.GetIsolate();
@@ -751,7 +803,8 @@ NATIVE_FUNCTION(SetWindowContentScaleCallback) {
 	if(args[0]->IsNullOrUndefined()) { window = NULL; }
 	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
 	//!UNKNOWN TYPE for callback (type: 'GLFWwindowcontentscalefun')!//
-	glfwSetWindowContentScaleCallback(window, callback);
+	// glfwSetWindowContentScaleCallback(window, callback);
+	THROW_ERROR("Not implemented."); // TODO
 }
 NATIVE_FUNCTION(PollEvents) {
 	glfwPollEvents();
@@ -843,14 +896,17 @@ NATIVE_FUNCTION(GetMouseButton) {
 }
 NATIVE_FUNCTION(GetCursorPos) {
 	v8::Isolate* isolate = args.GetIsolate();
-	if(args.Length() < 3) { THROW_ERROR("GetCursorPos takes 3 arguments."); }
+	if(args.Length() < 1) { THROW_ERROR("GetCursorPos takes 1 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
 	GLFWwindow* window;
 	if(args[0]->IsNullOrUndefined()) { window = NULL; }
 	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	//!UNKNOWN TYPE for xpos (type: 'double*')!//
-	//!UNKNOWN TYPE for ypos (type: 'double*')!//
-	glfwGetCursorPos(window, xpos, ypos);
+	double xpos, ypos;
+	glfwGetCursorPos(window, &xpos, &ypos);
+	v8::Local<v8::Object> obj = v8::Object::New(isolate);
+	obj->Set(TO_STRING("xpos"), TO_NUMBER(xpos));
+	obj->Set(TO_STRING("ypos"), TO_NUMBER(ypos));
+	RETURN(obj);
 }
 NATIVE_FUNCTION(SetCursorPos) {
 	v8::Isolate* isolate = args.GetIsolate();
@@ -868,12 +924,18 @@ NATIVE_FUNCTION(SetCursorPos) {
 NATIVE_FUNCTION(CreateCursor) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 3) { THROW_ERROR("CreateCursor takes 3 arguments."); }
-	//!UNKNOWN TYPE for image (type: 'const GLFWimage*')!//
+	if(!args[0]->IsObject()) { THROW_TYPE_ERROR("image is of type object!"); }
+	GLFWimage* image = (GLFWimage*)malloc(sizeof(GLFWimage));
+	if(!_toGLFWimage(image, args[0]->ToObject())) {
+		free(&image);
+		THROW_ERROR("Invalid image object!");
+	}
 	if(!args[1]->IsNumber()) { THROW_TYPE_ERROR("xhot is of type number!"); }
 	int xhot = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
 	if(!args[2]->IsNumber()) { THROW_TYPE_ERROR("yhot is of type number!"); }
 	int yhot = args[2]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
 	GLFWcursor* ret = glfwCreateCursor(image, xhot, yhot);
+	free(&image);
 	RETURN(TO_NUMBER((uint64_t)ret));
 }
 NATIVE_FUNCTION(CreateStandardCursor) {
@@ -914,7 +976,8 @@ NATIVE_FUNCTION(SetKeyCallback) {
 	if(args[0]->IsNullOrUndefined()) { window = NULL; }
 	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
 	//!UNKNOWN TYPE for callback (type: 'GLFWkeyfun')!//
-	glfwSetKeyCallback(window, callback);
+	// glfwSetKeyCallback(window, callback);
+	THROW_ERROR("Not implemented."); // TODO
 }
 NATIVE_FUNCTION(SetCharCallback) {
 	v8::Isolate* isolate = args.GetIsolate();
@@ -924,7 +987,8 @@ NATIVE_FUNCTION(SetCharCallback) {
 	if(args[0]->IsNullOrUndefined()) { window = NULL; }
 	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
 	//!UNKNOWN TYPE for callback (type: 'GLFWcharfun')!//
-	glfwSetCharCallback(window, callback);
+	// glfwSetCharCallback(window, callback);
+	THROW_ERROR("Not implemented."); // TODO
 }
 NATIVE_FUNCTION(SetCharModsCallback) {
 	v8::Isolate* isolate = args.GetIsolate();
@@ -934,7 +998,8 @@ NATIVE_FUNCTION(SetCharModsCallback) {
 	if(args[0]->IsNullOrUndefined()) { window = NULL; }
 	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
 	//!UNKNOWN TYPE for callback (type: 'GLFWcharmodsfun')!//
-	glfwSetCharModsCallback(window, callback);
+	// glfwSetCharModsCallback(window, callback);
+	THROW_ERROR("Not implemented."); // TODO
 }
 NATIVE_FUNCTION(SetMouseButtonCallback) {
 	v8::Isolate* isolate = args.GetIsolate();
@@ -944,7 +1009,8 @@ NATIVE_FUNCTION(SetMouseButtonCallback) {
 	if(args[0]->IsNullOrUndefined()) { window = NULL; }
 	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
 	//!UNKNOWN TYPE for callback (type: 'GLFWmousebuttonfun')!//
-	glfwSetMouseButtonCallback(window, callback);
+	// glfwSetMouseButtonCallback(window, callback);
+	THROW_ERROR("Not implemented."); // TODO
 }
 NATIVE_FUNCTION(SetCursorPosCallback) {
 	v8::Isolate* isolate = args.GetIsolate();
@@ -954,7 +1020,8 @@ NATIVE_FUNCTION(SetCursorPosCallback) {
 	if(args[0]->IsNullOrUndefined()) { window = NULL; }
 	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
 	//!UNKNOWN TYPE for callback (type: 'GLFWcursorposfun')!//
-	glfwSetCursorPosCallback(window, callback);
+	// glfwSetCursorPosCallback(window, callback);
+	THROW_ERROR("Not implemented."); // TODO
 }
 NATIVE_FUNCTION(SetCursorEnterCallback) {
 	v8::Isolate* isolate = args.GetIsolate();
@@ -964,7 +1031,8 @@ NATIVE_FUNCTION(SetCursorEnterCallback) {
 	if(args[0]->IsNullOrUndefined()) { window = NULL; }
 	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
 	//!UNKNOWN TYPE for callback (type: 'GLFWcursorenterfun')!//
-	glfwSetCursorEnterCallback(window, callback);
+	// glfwSetCursorEnterCallback(window, callback);
+	THROW_ERROR("Not implemented."); // TODO
 }
 NATIVE_FUNCTION(SetScrollCallback) {
 	v8::Isolate* isolate = args.GetIsolate();
@@ -974,7 +1042,8 @@ NATIVE_FUNCTION(SetScrollCallback) {
 	if(args[0]->IsNullOrUndefined()) { window = NULL; }
 	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
 	//!UNKNOWN TYPE for callback (type: 'GLFWscrollfun')!//
-	glfwSetScrollCallback(window, callback);
+	// glfwSetScrollCallback(window, callback);
+	THROW_ERROR("Not implemented."); // TODO
 }
 NATIVE_FUNCTION(SetDropCallback) {
 	v8::Isolate* isolate = args.GetIsolate();
@@ -984,7 +1053,8 @@ NATIVE_FUNCTION(SetDropCallback) {
 	if(args[0]->IsNullOrUndefined()) { window = NULL; }
 	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
 	//!UNKNOWN TYPE for callback (type: 'GLFWdropfun')!//
-	glfwSetDropCallback(window, callback);
+	// glfwSetDropCallback(window, callback);
+	THROW_ERROR("Not implemented."); // TODO
 }
 NATIVE_FUNCTION(JoystickPresent) {
 	v8::Isolate* isolate = args.GetIsolate();
@@ -996,30 +1066,42 @@ NATIVE_FUNCTION(JoystickPresent) {
 }
 NATIVE_FUNCTION(GetJoystickAxes) {
 	v8::Isolate* isolate = args.GetIsolate();
-	if(args.Length() < 2) { THROW_ERROR("GetJoystickAxes takes 2 arguments."); }
+	if(args.Length() < 1) { THROW_ERROR("GetJoystickAxes takes 1 arguments."); }
 	if(!args[0]->IsNumber()) { THROW_TYPE_ERROR("jid is of type number!"); }
 	int jid = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
-	//!UNKNOWN TYPE for count (type: 'int*')!//
-	const float* ret = glfwGetJoystickAxes(jid, count);
-	//!UNKNOWN RETURN TYPE for glfwGetJoystickAxes//
+	int count;
+	const float* ret = glfwGetJoystickAxes(jid, &count);
+	v8::Local<v8::Array> arr = v8::Array::New(isolate, count);
+	for(int i = 0; i < count; i++) {
+		arr->Set(i, TO_NUMBER(ret[i]));
+	}
+	RETURN(arr);
 }
 NATIVE_FUNCTION(GetJoystickButtons) {
 	v8::Isolate* isolate = args.GetIsolate();
-	if(args.Length() < 2) { THROW_ERROR("GetJoystickButtons takes 2 arguments."); }
+	if(args.Length() < 1) { THROW_ERROR("GetJoystickButtons takes 1 arguments."); }
 	if(!args[0]->IsNumber()) { THROW_TYPE_ERROR("jid is of type number!"); }
 	int jid = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
-	//!UNKNOWN TYPE for count (type: 'int*')!//
-	const unsigned char* ret = glfwGetJoystickButtons(jid, count);
-	//!UNKNOWN RETURN TYPE for glfwGetJoystickButtons//
+	int count;
+	const unsigned char* ret = glfwGetJoystickButtons(jid, &count);
+	v8::Local<v8::Array> arr = v8::Array::New(isolate, count);
+	for(int i = 0; i < count; i++) {
+		arr->Set(i, TO_NUMBER(ret[i]));
+	}
+	RETURN(arr);
 }
 NATIVE_FUNCTION(GetJoystickHats) {
 	v8::Isolate* isolate = args.GetIsolate();
-	if(args.Length() < 2) { THROW_ERROR("GetJoystickHats takes 2 arguments."); }
+	if(args.Length() < 1) { THROW_ERROR("GetJoystickHats takes 1 arguments."); }
 	if(!args[0]->IsNumber()) { THROW_TYPE_ERROR("jid is of type number!"); }
 	int jid = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
-	//!UNKNOWN TYPE for count (type: 'int*')!//
-	const unsigned char* ret = glfwGetJoystickHats(jid, count);
-	//!UNKNOWN RETURN TYPE for glfwGetJoystickHats//
+	int count;
+	const unsigned char* ret = glfwGetJoystickHats(jid, &count);
+	v8::Local<v8::Array> arr = v8::Array::New(isolate, count);
+	for(int i = 0; i < count; i++) {
+		arr->Set(i, TO_NUMBER(ret[i]));
+	}
+	RETURN(arr);
 }
 NATIVE_FUNCTION(GetJoystickName) {
 	v8::Isolate* isolate = args.GetIsolate();
@@ -1068,7 +1150,8 @@ NATIVE_FUNCTION(SetJoystickCallback) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 1) { THROW_ERROR("SetJoystickCallback takes 1 arguments."); }
 	//!UNKNOWN TYPE for callback (type: 'GLFWjoystickfun')!//
-	glfwSetJoystickCallback(callback);
+	// glfwSetJoystickCallback(callback);
+	THROW_ERROR("Not implemented."); // TODO
 }
 NATIVE_FUNCTION(UpdateGamepadMappings) {
 	v8::Isolate* isolate = args.GetIsolate();
@@ -1091,9 +1174,12 @@ NATIVE_FUNCTION(GetGamepadState) {
 	if(args.Length() < 2) { THROW_ERROR("GetGamepadState takes 2 arguments."); }
 	if(!args[0]->IsNumber()) { THROW_TYPE_ERROR("jid is of type number!"); }
 	int jid = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
-	//!UNKNOWN TYPE for state (type: 'GLFWgamepadstate*')!//
-	int ret = glfwGetGamepadState(jid, state);
-	RETURN(TO_NUMBER(ret));
+	GLFWgamepadstate* state;
+	if(!glfwGetGamepadState(jid, state)) {
+		RETURN(TO_BOOLEAN(false));
+	} else {
+		RETURN(_fromGLFWgamepadstate(state));
+	}
 }
 NATIVE_FUNCTION(SetClipboardString) {
 	v8::Isolate* isolate = args.GetIsolate();
@@ -1191,41 +1277,48 @@ NATIVE_FUNCTION(VulkanSupported) {
 }
 NATIVE_FUNCTION(GetRequiredInstanceExtensions) {
 	v8::Isolate* isolate = args.GetIsolate();
-	if(args.Length() < 1) { THROW_ERROR("GetRequiredInstanceExtensions takes 1 arguments."); }
-	//!UNKNOWN TYPE for count (type: 'uint32_t*')!//
-	const char** ret = glfwGetRequiredInstanceExtensions(count);
-	//!UNKNOWN RETURN TYPE for glfwGetRequiredInstanceExtensions//
+	uint32_t count;
+	const char** ret = glfwGetRequiredInstanceExtensions(&count);
+	v8::Local<v8::Array> arr = v8::Array::New(isolate, count);
+	for(int i = 0; i < count; i++) {
+		arr->Set(i, TO_STRING(ret[i]));
+	}
+	RETURN(arr);
 }
 NATIVE_FUNCTION(GetInstanceProcAddress) {
 	v8::Isolate* isolate = args.GetIsolate();
-	if(args.Length() < 2) { THROW_ERROR("GetInstanceProcAddress takes 2 arguments."); }
-	//!UNKNOWN TYPE for instance (type: 'VkInstance')!//
-	if(!args[1]->IsString()) { THROW_TYPE_ERROR("procname is of type string!"); }
-	const char* procname = (const char*)(*v8::String::Utf8Value(args[1]));
-	GLFWvkproc ret = glfwGetInstanceProcAddress(instance, procname);
-	RETURN(TO_NUMBER((uint64_t)ret));
+	THROW_ERROR("Not implemented."); //TODO
+	// if(args.Length() < 2) { THROW_ERROR("GetInstanceProcAddress takes 2 arguments."); }
+	// if(!args[0]->IsNumber()) { THROW_TYPE_ERROR("instance is of type pointer!"); }
+	// VkInstance instance;
+	// if(!args[1]->IsString()) { THROW_TYPE_ERROR("procname is of type string!"); }
+	// const char* procname = (const char*)(*v8::String::Utf8Value(args[1]));
+	// GLFWvkproc ret = glfwGetInstanceProcAddress(instance, procname);
+	// RETURN(TO_NUMBER((uint64_t)ret));
 }
 NATIVE_FUNCTION(GetPhysicalDevicePresentationSupport) {
 	v8::Isolate* isolate = args.GetIsolate();
-	if(args.Length() < 3) { THROW_ERROR("GetPhysicalDevicePresentationSupport takes 3 arguments."); }
-	//!UNKNOWN TYPE for instance (type: 'VkInstance')!//
-	//!UNKNOWN TYPE for device (type: 'VkPhysicalDevice')!//
-	//!UNKNOWN TYPE for queuefamily (type: 'uint32_t')!//
-	int ret = glfwGetPhysicalDevicePresentationSupport(instance, device, queuefamily);
-	RETURN(TO_NUMBER(ret));
+	THROW_ERROR("Not implemented."); //TODO
+	// if(args.Length() < 3) { THROW_ERROR("GetPhysicalDevicePresentationSupport takes 3 arguments."); }
+	// //!UNKNOWN TYPE for instance (type: 'VkInstance')!//
+	// //!UNKNOWN TYPE for device (type: 'VkPhysicalDevice')!//
+	// //!UNKNOWN TYPE for queuefamily (type: 'uint32_t')!//
+	// int ret = glfwGetPhysicalDevicePresentationSupport(instance, device, queuefamily);
+	// RETURN(TO_NUMBER(ret));
 }
 NATIVE_FUNCTION(CreateWindowSurface) {
 	v8::Isolate* isolate = args.GetIsolate();
-	if(args.Length() < 4) { THROW_ERROR("CreateWindowSurface takes 4 arguments."); }
-	//!UNKNOWN TYPE for instance (type: 'VkInstance')!//
-	if(!args[1]->IsNumber() && !args[1]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* window;
-	if(args[1]->IsNullOrUndefined()) { window = NULL; }
-	else { window = reinterpret_cast<GLFWwindow*>(args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	//!UNKNOWN TYPE for allocator (type: 'const VkAllocationCallbacks*')!//
-	//!UNKNOWN TYPE for surface (type: 'VkSurfaceKHR*')!//
-	VkResult ret = glfwCreateWindowSurface(instance, window, allocator, surface);
-	//!UNKNOWN RETURN TYPE for glfwCreateWindowSurface//
+	THROW_ERROR("Not implemented."); //TODO
+	// if(args.Length() < 4) { THROW_ERROR("CreateWindowSurface takes 4 arguments."); }
+	// //!UNKNOWN TYPE for instance (type: 'VkInstance')!//
+	// if(!args[1]->IsNumber() && !args[1]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
+	// GLFWwindow* window;
+	// if(args[1]->IsNullOrUndefined()) { window = NULL; }
+	// else { window = reinterpret_cast<GLFWwindow*>(args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	// //!UNKNOWN TYPE for allocator (type: 'const VkAllocationCallbacks*')!//
+	// //!UNKNOWN TYPE for surface (type: 'VkSurfaceKHR*')!//
+	// VkResult ret = glfwCreateWindowSurface(instance, window, allocator, surface);
+	// //!UNKNOWN RETURN TYPE for glfwCreateWindowSurface//
 }
 
 #pragma endregion
