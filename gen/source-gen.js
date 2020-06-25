@@ -4,7 +4,6 @@ const SRC_TEMPLATE = require("fs").readFileSync("src/_template.cpp").toString();
 
 const TYPE_MAP = {
     "void": "undefined",
-    "void*": "undefined",
     "int": "number",
     "float": "number",
     "double": "number",
@@ -18,7 +17,8 @@ const TYPE_MAP = {
     "const GLFWgammaramp*": "pointer",
     "GLFWgammaramp*": "pointer",
     "GLFWglproc": "pointer",
-    "GLFWvkproc": "pointer"
+    "GLFWvkproc": "pointer",
+    "void*": "pointer"
 };
 
 module.exports = async function(path, prefix) {
