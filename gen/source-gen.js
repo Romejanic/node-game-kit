@@ -6,12 +6,19 @@ const TYPE_MAP = {
     "void": "undefined",
     "void*": "undefined",
     "int": "number",
-    "int*": "array",
-    "const char*": "string",
     "float": "number",
-    "float*": "array",
     "double": "number",
-    "double*": "array",
+    "const char*": "string",
+    "GLFWwindow*": "pointer",
+    "GLFWmonitor*": "pointer",
+    "const GLFWimage*": "pointer",
+    "GLFWimage*": "pointer",
+    "GLFWcursor*": "pointer",
+    "GLFWgamepadstate*": "pointer",
+    "const GLFWgammaramp*": "pointer",
+    "GLFWgammaramp*": "pointer",
+    "GLFWglproc": "pointer",
+    "GLFWvkproc": "pointer"
 };
 
 module.exports = async function(path, prefix) {
@@ -19,7 +26,7 @@ module.exports = async function(path, prefix) {
     //
     let consts = [];
     let methods = {};
-    let types = [];
+    // let types = [];
     //
     for(let line of lines) {
         line = line.trim();
@@ -44,13 +51,13 @@ module.exports = async function(path, prefix) {
                 methods[functionName].arguments.push({
                     type, name
                 });
-                if(types.indexOf(type) < 0) types.push(type);
+                // if(types.indexOf(type) < 0) types.push(type);
             }
         }
     }
     // debug output
     await fs.writeFile(`debug_${prefix}_members.json`, JSON.stringify({ consts, methods }, null, 4));
-    console.log("All parameter types:", types);
+    // console.log("All parameter types:", types);
     // generate source file
     let src = SRC_TEMPLATE.split("\n");
     for(let i in src) {
@@ -93,19 +100,7 @@ module.exports = async function(path, prefix) {
                         let argCount = method.arguments.length;
                         funcs += `\tif(args.Length() < ${method.arguments.length}) { THROW_ERROR("${methodName} takes ${argCount} arguments."); }\n`;
                         for(let i = 0; i < argCount; i++) {
-                            switch(TYPE_MAP[method.arguments[i].type]) {
-                                case "number":
-                                    funcs += `\tif(!args[${i}]->IsNumber()) { THROW_TYPE_ERROR("${method.arguments[i].name} is of type ${TYPE_MAP[method.arguments[i].type]}!"); }\n`;
-                                    funcs += `\t${method.arguments[i].type} arg${i} = args[${i}]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);\n`;
-                                    break;
-                                case "string":
-                                    funcs += `\tif(!args[${i}]->IsString()) { THROW_TYPE_ERROR("${method.arguments[i].name} is of type ${TYPE_MAP[method.arguments[i].type]}!"); }\n`
-                                    funcs += `\tconst char* arg${i} = (const char*)(*v8::String::Utf8Value(args[${i}]));\n`;
-                                    break;
-                                default:
-                                    funcs += `\t//!UNKNOWN TYPE for arg${i}!//\n`;
-                                    break;
-                            }
+                            funcs += convertFromV8Argument(method.arguments[i], i);
                         }
                         let argArr = [];
                         for(let i = 0; i < argCount; i++) {
@@ -113,12 +108,12 @@ module.exports = async function(path, prefix) {
                         }
                         argArr = argArr.join(", ");
                         if(hasReturn) {
-                            funcs += `\t${method.returnType} ret = ${funcName}(${argArr});\n\tRETURN(TO_NUMBER(ret));\n`;
+                            funcs += convertToV8Return(funcName, method, argArr);
                         } else {
                             funcs += `\t${funcName}(${argArr});\n`;
                         }
                     } else if(hasReturn) {
-                        funcs += `\t${method.returnType} ret = ${funcName}();\n\tRETURN(TO_NUMBER(ret));\n`;
+                        funcs += convertToV8Return(funcName, method, "");
                     } else {
                         // just call function and move on
                         funcs += `\t${funcName}();\n`;
@@ -136,3 +131,68 @@ module.exports = async function(path, prefix) {
     src = src.join("\n");
     await fs.writeFile(`./src/${prefix.toLowerCase()}.cpp`, src);
 };
+
+function convertFromV8Argument(arg, i) {
+    let out = addTypeCheck(arg, i);
+    switch(arg.type) {
+        case "int":
+            out += `\tint arg${i} = args[${i}]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);\n`;
+            break;
+        case "double":
+        case "float":
+            out += `\t${arg.type} arg${i} = args[${i}]->NumberValue(isolate->GetCurrentContext()).FromMaybe(0);\n`;
+            break;
+        case "const char*":
+            out += `\tconst char* arg${i} = (const char*)(*v8::String::Utf8Value(args[${i}]));\n`;
+            break;
+        default:
+            if(TYPE_MAP[arg.type] === "pointer") {
+                out += `\t${arg.type} arg${i};\n`;
+                out += `\tif(args[${i}]->IsNullOrUndefined()) { arg${i} = NULL; }\n`;
+                out += `\telse { arg${i} = reinterpret_cast<${arg.type}>(args[${i}]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }\n`;
+            }
+            break;
+    }
+    return out;
+}
+
+function addTypeCheck(arg, i) {
+    switch(TYPE_MAP[arg.type]) {
+        case "number":
+            return `\tif(!args[${i}]->IsNumber()) { THROW_TYPE_ERROR("${arg.name} is of type ${TYPE_MAP[arg.type]}!"); }\n`;
+        case "pointer":
+            return `\tif(!args[${i}]->IsNumber() && !args[${i}]->IsNullOrUndefined()) { THROW_TYPE_ERROR("${arg.name} is of type ${TYPE_MAP[arg.type]}!"); }\n`;
+        case "string":
+            return `\tif(!args[${i}]->IsString()) { THROW_TYPE_ERROR("${arg.name} is of type ${TYPE_MAP[arg.type]}!"); }\n`;
+        default:
+            return `\t//!UNKNOWN TYPE for arg${i} (type: '${arg.type}')!//\n`;
+    }
+}
+
+function convertToV8Return(name, method, argArr) {
+    if(method.returnType.endsWith("fun")) {
+        // we can't return function callbacks in js, so treat
+        // it like a void method
+        return `\t${name}(${argArr});\n`;
+    }
+    let out = `\t${method.returnType} ret = ${name}(${argArr});\n`;
+    switch(method.returnType) {
+        case "int":
+        case "float":
+        case "double":
+        case "uint64_t":
+            out += `\tRETURN(TO_NUMBER(ret));\n`;
+            break;
+        case "const char*":
+            out += `\tRETURN(TO_STRING(ret));\n`;
+            break;
+        default:
+            if(TYPE_MAP[method.returnType] === "pointer") {
+                out += `\tRETURN(TO_NUMBER((uint64_t)ret));\n`;
+            } else {
+                out += `\t//!UNKNOWN RETURN TYPE for ${name}//\n`;
+            }
+            break;
+    }
+    return out;
+}
