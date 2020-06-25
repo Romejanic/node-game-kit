@@ -10,6 +10,7 @@
  * header file.
  */
 
+#include <config.h>
 #include <native-helper.h>
 //<INCLUDE-HEADER>
 
