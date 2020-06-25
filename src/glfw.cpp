@@ -15,6 +15,7 @@
 #include <GLFW/glfw3.h>
 
 //==========================STRUCTS==========================//
+#pragma region
 GLFWvidmode* _toGLFWvidmode(v8::Local<v8::Object> arg) {
 	v8::Isolate* isolate = arg->GetIsolate();
 	GLFWvidmode* ret = (GLFWvidmode*)malloc(sizeof(GLFWvidmode));
@@ -94,8 +95,10 @@ v8::Local<v8::Object> _fromGLFWgamepadstate(const GLFWgamepadstate* arg) {
 	return ret;
 }
 
+#pragma endregion
 
 //==========================METHODS==========================//
+#pragma region
 NATIVE_FUNCTION(Init) {
 	v8::Isolate* isolate = args.GetIsolate();
 	int ret = glfwInit();
@@ -1225,12 +1228,14 @@ NATIVE_FUNCTION(CreateWindowSurface) {
 	//!UNKNOWN RETURN TYPE for glfwCreateWindowSurface//
 }
 
+#pragma endregion
 
 //==========================INIT==========================//
 
 void ExportModule(v8::Local<v8::Object> exports) {
     v8::Isolate* isolate = exports->GetIsolate();
     // Consts
+    #pragma region
 	EXPORT_CONST("VERSION_MAJOR", GLFW_VERSION_MAJOR);
 	EXPORT_CONST("VERSION_MINOR", GLFW_VERSION_MINOR);
 	EXPORT_CONST("VERSION_REVISION", GLFW_VERSION_REVISION);
@@ -1524,7 +1529,9 @@ void ExportModule(v8::Local<v8::Object> exports) {
 	EXPORT_CONST("COCOA_MENUBAR", GLFW_COCOA_MENUBAR);
 	EXPORT_CONST("DONT_CARE", GLFW_DONT_CARE);
 
+    #pragma endregion
     // Methods
+    #pragma region
 	NODE_SET_METHOD(exports, "init", Init);
 	NODE_SET_METHOD(exports, "terminate", Terminate);
 	NODE_SET_METHOD(exports, "initHint", InitHint);
@@ -1645,5 +1652,6 @@ void ExportModule(v8::Local<v8::Object> exports) {
 	NODE_SET_METHOD(exports, "getPhysicalDevicePresentationSupport", GetPhysicalDevicePresentationSupport);
 	NODE_SET_METHOD(exports, "createWindowSurface", CreateWindowSurface);
 
+    #pragma endregion
 }
 NODE_MODULE(NODE_GYP_MODULE_NAME, ExportModule);

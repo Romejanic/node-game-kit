@@ -15,18 +15,26 @@
 //<INCLUDE-HEADER>
 
 //==========================STRUCTS==========================//
+#pragma region
 //<STRUCT-CONVERSION>
+#pragma endregion
 
 //==========================METHODS==========================//
+#pragma region
 //<FUNCTIONS>
+#pragma endregion
 
 //==========================INIT==========================//
 
 void ExportModule(v8::Local<v8::Object> exports) {
     v8::Isolate* isolate = exports->GetIsolate();
     // Consts
+    #pragma region
     //<CONSTANTS>
+    #pragma endregion
     // Methods
+    #pragma region
     //<FUNC-EXPORTS>
+    #pragma endregion
 }
 NODE_MODULE(NODE_GYP_MODULE_NAME, ExportModule);
