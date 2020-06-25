@@ -14,28 +14,85 @@
 #include <native-helper.h>
 #include <GLFW/glfw3.h>
 
-GLFWvidmode* toGLFWvidmode(v8::Local<v8::Object> obj) {
-	v8::Isolate* isolate = obj->GetIsolate();
-	GLFWvidmode* vm = (GLFWvidmode*)malloc(sizeof(GLFWvidmode));
-	vm->width = obj->Get(TO_STRING("width"))->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
-	vm->height = obj->Get(TO_STRING("height"))->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
-	vm->redBits = obj->Get(TO_STRING("redBits"))->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
-	vm->greenBits = obj->Get(TO_STRING("greenBits"))->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
-	vm->blueBits = obj->Get(TO_STRING("blueBits"))->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
-	vm->refreshRate = obj->Get(TO_STRING("refreshRate"))->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
-	return vm;
-}
-v8::Local<v8::Object> fromGLFWvidmode(GLFWvidmode* vm) {
-	v8::Isolate* isolate = v8::Isolate::GetCurrent();
-	v8::Local<v8::Object> ret = v8::Object::New(isolate);
-	ret->Set(TO_STRING("width"), TO_NUMBER(vm->width));
-	ret->Set(TO_STRING("height"), TO_NUMBER(vm->height));
-	ret->Set(TO_STRING("redBits"), TO_NUMBER(vm->redBits));
-	ret->Set(TO_STRING("greenBits"), TO_NUMBER(vm->greenBits));
-	ret->Set(TO_STRING("blueBits"), TO_NUMBER(vm->blueBits));
-	ret->Set(TO_STRING("refreshRate"), TO_NUMBER(vm->refreshRate));
+GLFWvidmode* toGLFWvidmode(v8::Local<v8::Object> arg) {
+	v8::Isolate* isolate = arg->GetIsolate();
+	GLFWvidmode* ret = (GLFWvidmode*)malloc(sizeof(GLFWvidmode));
+	ret->width = arg->Get(TO_STRING("width"))->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	ret->height = arg->Get(TO_STRING("height"))->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	ret->redBits = arg->Get(TO_STRING("redBits"))->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	ret->greenBits = arg->Get(TO_STRING("greenBits"))->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	ret->blueBits = arg->Get(TO_STRING("blueBits"))->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	ret->refreshRate = arg->Get(TO_STRING("refreshRate"))->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
 	return ret;
 }
+v8::Local<v8::Object> fromGLFWvidmode(GLFWvidmode* arg) {
+	v8::Isolate* isolate = v8::Isolate::GetCurrent();
+	v8::Local<v8::Object> ret = v8::Object::New(isolate);
+	ret->Set(TO_STRING("width"), TO_NUMBER(arg->width));
+	ret->Set(TO_STRING("height"), TO_NUMBER(arg->height));
+	ret->Set(TO_STRING("redBits"), TO_NUMBER(arg->redBits));
+	ret->Set(TO_STRING("greenBits"), TO_NUMBER(arg->greenBits));
+	ret->Set(TO_STRING("blueBits"), TO_NUMBER(arg->blueBits));
+	ret->Set(TO_STRING("refreshRate"), TO_NUMBER(arg->refreshRate));
+	return ret;
+}
+GLFWgammaramp* toGLFWgammaramp(v8::Local<v8::Object> arg) {
+	v8::Isolate* isolate = arg->GetIsolate();
+	GLFWgammaramp* ret = (GLFWgammaramp*)malloc(sizeof(GLFWgammaramp));
+	ret->red = arg->Get(TO_STRING("red"))->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	ret->green = arg->Get(TO_STRING("green"))->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	ret->blue = arg->Get(TO_STRING("blue"))->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	ret->size = arg->Get(TO_STRING("size"))->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	return ret;
+}
+v8::Local<v8::Object> fromGLFWgammaramp(GLFWgammaramp* arg) {
+	v8::Isolate* isolate = v8::Isolate::GetCurrent();
+	v8::Local<v8::Object> ret = v8::Object::New(isolate);
+	ret->Set(TO_STRING("red"), TO_NUMBER(arg->red));
+	ret->Set(TO_STRING("green"), TO_NUMBER(arg->green));
+	ret->Set(TO_STRING("blue"), TO_NUMBER(arg->blue));
+	ret->Set(TO_STRING("size"), TO_NUMBER(arg->size));
+	return ret;
+}
+GLFWimage* toGLFWimage(v8::Local<v8::Object> arg) {
+	v8::Isolate* isolate = arg->GetIsolate();
+	GLFWimage* ret = (GLFWimage*)malloc(sizeof(GLFWimage));
+	ret->width = arg->Get(TO_STRING("width"))->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	ret->height = arg->Get(TO_STRING("height"))->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	ret->pixels = arg->Get(TO_STRING("pixels"))->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	return ret;
+}
+v8::Local<v8::Object> fromGLFWimage(GLFWimage* arg) {
+	v8::Isolate* isolate = v8::Isolate::GetCurrent();
+	v8::Local<v8::Object> ret = v8::Object::New(isolate);
+	ret->Set(TO_STRING("width"), TO_NUMBER(arg->width));
+	ret->Set(TO_STRING("height"), TO_NUMBER(arg->height));
+	ret->Set(TO_STRING("pixels"), TO_NUMBER(arg->pixels));
+	return ret;
+}
+GLFWgamepadstate* toGLFWgamepadstate(v8::Local<v8::Object> arg) {
+	v8::Isolate* isolate = arg->GetIsolate();
+	GLFWgamepadstate* ret = (GLFWgamepadstate*)malloc(sizeof(GLFWgamepadstate));
+	ret->buttons[15] = arg->Get(TO_STRING("buttons[15]"))->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	ret->axes[6] = arg->Get(TO_STRING("axes[6]"))->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	return ret;
+}
+v8::Local<v8::Object> fromGLFWgamepadstate(GLFWgamepadstate* arg) {
+	v8::Isolate* isolate = v8::Isolate::GetCurrent();
+	v8::Local<v8::Object> ret = v8::Object::New(isolate);
+	v8::Local<v8::Array> buttonsArr = v8::Array::New(isolate, 15);
+	for(int i = 0; i < 15; i++) {
+		buttonsArr->Set(i, TO_NUMBER(arg->buttons[i]));
+	}
+	ret->Set(TO_STRING("buttons"), buttonsArr);
+	v8::Local<v8::Array> axesArr = v8::Array::New(isolate, 6);
+	for(int i = 0; i < 6; i++) {
+		axesArr->Set(i, TO_NUMBER(arg->axes[i]));
+	}
+	ret->Set(TO_STRING("axes"), axesArr);
+	return ret;
+}
+
 
 NATIVE_FUNCTION(Init) {
 	v8::Isolate* isolate = args.GetIsolate();

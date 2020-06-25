@@ -149,7 +149,35 @@ module.exports = async function(path, prefix) {
             case "//<STRUCT-CONVERSION>":
                 let structs = "";
                 for(let structName in objectDefs) {
-                    
+                    // v8 -> struct
+                    structs += `${structName}* to${structName}(v8::Local<v8::Object> arg) {\n`;
+                    structs += `\tv8::Isolate* isolate = arg->GetIsolate();\n`;
+                    structs += `\t${structName}* ret = (${structName}*)malloc(sizeof(${structName}));\n`;
+                    for(let varName in objectDefs[structName]) {
+                        structs += `\tret->${varName} = arg->Get(TO_STRING("${varName}"))->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);\n`;
+                    }
+                    structs += `\treturn ret;\n`;
+                    structs += `}\n`;
+                    // struct -> v8
+                    structs += `v8::Local<v8::Object> from${structName}(${structName}* arg) {\n`;
+                    structs += `\tv8::Isolate* isolate = v8::Isolate::GetCurrent();\n`;
+                    structs += `\tv8::Local<v8::Object> ret = v8::Object::New(isolate);\n`;
+                    for(let varName in objectDefs[structName]) {
+                        let isArray = varName.indexOf("[") > 0 && varName.charAt(varName.length-1) === "]";
+                        if(isArray) {
+                            let length = varName.substring(varName.indexOf("[")+1,varName.indexOf("]"));
+                            varName = varName.substring(0, varName.indexOf("["));
+                            structs += `\tv8::Local<v8::Array> ${varName}Arr = v8::Array::New(isolate, ${length});\n`;
+                            structs += `\tfor(int i = 0; i < ${length}; i++) {\n`;
+                            structs += `\t\t${varName}Arr->Set(i, TO_NUMBER(arg->${varName}[i]));\n`;
+                            structs += `\t}\n`;
+                            structs += `\tret->Set(TO_STRING("${varName}"), ${varName}Arr);\n`;
+                        } else {
+                            structs += `\tret->Set(TO_STRING("${varName}"), TO_NUMBER(arg->${varName}));\n`;
+                        }
+                    }
+                    structs += `\treturn ret;\n`;
+                    structs += `}\n`;
                 }
                 src[i] = structs;
                 break;
