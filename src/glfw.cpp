@@ -134,8 +134,15 @@ NATIVE_FUNCTION(GetError) {
 NATIVE_FUNCTION(SetErrorCallback) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 1) { THROW_ERROR("SetErrorCallback takes 1 arguments."); }
-	//!UNKNOWN TYPE for callback (type: 'GLFWerrorfun')!//
-	glfwSetErrorCallback(callback);
+	if(!args[0]->IsFunction()) { THROW_ERROR("callback is of type function."); }
+	v8::Handle<v8::Function> callback = v8::Handle<v8::Function>::Cast(args[0]);
+	glfwSetErrorCallback([](int code, const char* msg) {
+		v8::Isolate* isolate = v8::Isolate::GetCurrent();
+		v8::Handle<v8::Value> args[2];
+		args[0] = TO_NUMBER(code);
+		args[1] = TO_STRING(msg);
+		callback->Call(isolate->GetCurrentContext()->Global(), 2, args);
+	});
 }
 NATIVE_FUNCTION(GetMonitors) {
 	v8::Isolate* isolate = args.GetIsolate();
