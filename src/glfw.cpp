@@ -14,6 +14,29 @@
 #include <native-helper.h>
 #include <GLFW/glfw3.h>
 
+GLFWvidmode* toGLFWvidmode(v8::Local<v8::Object> obj) {
+	v8::Isolate* isolate = obj->GetIsolate();
+	GLFWvidmode* vm = (GLFWvidmode*)malloc(sizeof(GLFWvidmode));
+	vm->width = obj->Get(TO_STRING("width"))->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	vm->height = obj->Get(TO_STRING("height"))->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	vm->redBits = obj->Get(TO_STRING("redBits"))->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	vm->greenBits = obj->Get(TO_STRING("greenBits"))->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	vm->blueBits = obj->Get(TO_STRING("blueBits"))->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	vm->refreshRate = obj->Get(TO_STRING("refreshRate"))->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	return vm;
+}
+v8::Local<v8::Object> fromGLFWvidmode(GLFWvidmode* vm) {
+	v8::Isolate* isolate = v8::Isolate::GetCurrent();
+	v8::Local<v8::Object> ret = v8::Object::New(isolate);
+	ret->Set(TO_STRING("width"), TO_NUMBER(vm->width));
+	ret->Set(TO_STRING("height"), TO_NUMBER(vm->height));
+	ret->Set(TO_STRING("redBits"), TO_NUMBER(vm->redBits));
+	ret->Set(TO_STRING("greenBits"), TO_NUMBER(vm->greenBits));
+	ret->Set(TO_STRING("blueBits"), TO_NUMBER(vm->blueBits));
+	ret->Set(TO_STRING("refreshRate"), TO_NUMBER(vm->refreshRate));
+	return ret;
+}
+
 NATIVE_FUNCTION(Init) {
 	v8::Isolate* isolate = args.GetIsolate();
 	int ret = glfwInit();

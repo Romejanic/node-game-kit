@@ -14,6 +14,8 @@
 #include <native-helper.h>
 //<INCLUDE-HEADER>
 
+//<STRUCT-CONVERSION>
+
 //<FUNCTIONS>
 
 //==========================INIT==========================//

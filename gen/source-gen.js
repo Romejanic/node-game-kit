@@ -146,6 +146,13 @@ module.exports = async function(path, prefix) {
                 }
                 src[i] = funcs;
                 break;
+            case "//<STRUCT-CONVERSION>":
+                let structs = "";
+                for(let structName in objectDefs) {
+                    
+                }
+                src[i] = structs;
+                break;
             default:
                 continue; // skip line
         }
