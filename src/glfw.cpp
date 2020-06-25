@@ -106,18 +106,18 @@ NATIVE_FUNCTION(InitHint) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 2) { THROW_ERROR("InitHint takes 2 arguments."); }
 	if(!args[0]->IsNumber()) { THROW_TYPE_ERROR("hint is of type number!"); }
-	int arg0 = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	int hint = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
 	if(!args[1]->IsNumber()) { THROW_TYPE_ERROR("value is of type number!"); }
-	int arg1 = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
-	glfwInitHint(arg0, arg1);
+	int value = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	glfwInitHint(hint, value);
 }
 NATIVE_FUNCTION(GetVersion) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 3) { THROW_ERROR("GetVersion takes 3 arguments."); }
-	//!UNKNOWN TYPE for arg0 (type: 'int*')!//
-	//!UNKNOWN TYPE for arg1 (type: 'int*')!//
-	//!UNKNOWN TYPE for arg2 (type: 'int*')!//
-	glfwGetVersion(arg0, arg1, arg2);
+	//!UNKNOWN TYPE for major (type: 'int*')!//
+	//!UNKNOWN TYPE for minor (type: 'int*')!//
+	//!UNKNOWN TYPE for rev (type: 'int*')!//
+	glfwGetVersion(major, minor, rev);
 }
 NATIVE_FUNCTION(GetVersionString) {
 	v8::Isolate* isolate = args.GetIsolate();
@@ -127,21 +127,21 @@ NATIVE_FUNCTION(GetVersionString) {
 NATIVE_FUNCTION(GetError) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 1) { THROW_ERROR("GetError takes 1 arguments."); }
-	//!UNKNOWN TYPE for arg0 (type: 'const char**')!//
-	int ret = glfwGetError(arg0);
+	//!UNKNOWN TYPE for description (type: 'const char**')!//
+	int ret = glfwGetError(description);
 	RETURN(TO_NUMBER(ret));
 }
 NATIVE_FUNCTION(SetErrorCallback) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 1) { THROW_ERROR("SetErrorCallback takes 1 arguments."); }
-	//!UNKNOWN TYPE for arg0 (type: 'GLFWerrorfun')!//
-	glfwSetErrorCallback(arg0);
+	//!UNKNOWN TYPE for callback (type: 'GLFWerrorfun')!//
+	glfwSetErrorCallback(callback);
 }
 NATIVE_FUNCTION(GetMonitors) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 1) { THROW_ERROR("GetMonitors takes 1 arguments."); }
-	//!UNKNOWN TYPE for arg0 (type: 'int*')!//
-	GLFWmonitor** ret = glfwGetMonitors(arg0);
+	//!UNKNOWN TYPE for count (type: 'int*')!//
+	GLFWmonitor** ret = glfwGetMonitors(count);
 	//!UNKNOWN RETURN TYPE for glfwGetMonitors//
 }
 NATIVE_FUNCTION(GetPrimaryMonitor) {
@@ -153,138 +153,138 @@ NATIVE_FUNCTION(GetMonitorPos) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 3) { THROW_ERROR("GetMonitorPos takes 3 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("monitor is of type pointer!"); }
-	GLFWmonitor* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWmonitor*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	//!UNKNOWN TYPE for arg1 (type: 'int*')!//
-	//!UNKNOWN TYPE for arg2 (type: 'int*')!//
-	glfwGetMonitorPos(arg0, arg1, arg2);
+	GLFWmonitor* monitor;
+	if(args[0]->IsNullOrUndefined()) { monitor = NULL; }
+	else { monitor = reinterpret_cast<GLFWmonitor*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	//!UNKNOWN TYPE for xpos (type: 'int*')!//
+	//!UNKNOWN TYPE for ypos (type: 'int*')!//
+	glfwGetMonitorPos(monitor, xpos, ypos);
 }
 NATIVE_FUNCTION(GetMonitorWorkarea) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 5) { THROW_ERROR("GetMonitorWorkarea takes 5 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("monitor is of type pointer!"); }
-	GLFWmonitor* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWmonitor*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	//!UNKNOWN TYPE for arg1 (type: 'int*')!//
-	//!UNKNOWN TYPE for arg2 (type: 'int*')!//
-	//!UNKNOWN TYPE for arg3 (type: 'int*')!//
-	//!UNKNOWN TYPE for arg4 (type: 'int*')!//
-	glfwGetMonitorWorkarea(arg0, arg1, arg2, arg3, arg4);
+	GLFWmonitor* monitor;
+	if(args[0]->IsNullOrUndefined()) { monitor = NULL; }
+	else { monitor = reinterpret_cast<GLFWmonitor*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	//!UNKNOWN TYPE for xpos (type: 'int*')!//
+	//!UNKNOWN TYPE for ypos (type: 'int*')!//
+	//!UNKNOWN TYPE for width (type: 'int*')!//
+	//!UNKNOWN TYPE for height (type: 'int*')!//
+	glfwGetMonitorWorkarea(monitor, xpos, ypos, width, height);
 }
 NATIVE_FUNCTION(GetMonitorPhysicalSize) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 3) { THROW_ERROR("GetMonitorPhysicalSize takes 3 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("monitor is of type pointer!"); }
-	GLFWmonitor* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWmonitor*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	//!UNKNOWN TYPE for arg1 (type: 'int*')!//
-	//!UNKNOWN TYPE for arg2 (type: 'int*')!//
-	glfwGetMonitorPhysicalSize(arg0, arg1, arg2);
+	GLFWmonitor* monitor;
+	if(args[0]->IsNullOrUndefined()) { monitor = NULL; }
+	else { monitor = reinterpret_cast<GLFWmonitor*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	//!UNKNOWN TYPE for widthMM (type: 'int*')!//
+	//!UNKNOWN TYPE for heightMM (type: 'int*')!//
+	glfwGetMonitorPhysicalSize(monitor, widthMM, heightMM);
 }
 NATIVE_FUNCTION(GetMonitorContentScale) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 3) { THROW_ERROR("GetMonitorContentScale takes 3 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("monitor is of type pointer!"); }
-	GLFWmonitor* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWmonitor*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	//!UNKNOWN TYPE for arg1 (type: 'float*')!//
-	//!UNKNOWN TYPE for arg2 (type: 'float*')!//
-	glfwGetMonitorContentScale(arg0, arg1, arg2);
+	GLFWmonitor* monitor;
+	if(args[0]->IsNullOrUndefined()) { monitor = NULL; }
+	else { monitor = reinterpret_cast<GLFWmonitor*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	//!UNKNOWN TYPE for xscale (type: 'float*')!//
+	//!UNKNOWN TYPE for yscale (type: 'float*')!//
+	glfwGetMonitorContentScale(monitor, xscale, yscale);
 }
 NATIVE_FUNCTION(GetMonitorName) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 1) { THROW_ERROR("GetMonitorName takes 1 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("monitor is of type pointer!"); }
-	GLFWmonitor* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWmonitor*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	const char* ret = glfwGetMonitorName(arg0);
+	GLFWmonitor* monitor;
+	if(args[0]->IsNullOrUndefined()) { monitor = NULL; }
+	else { monitor = reinterpret_cast<GLFWmonitor*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	const char* ret = glfwGetMonitorName(monitor);
 	RETURN(TO_STRING(ret));
 }
 NATIVE_FUNCTION(SetMonitorUserPointer) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 2) { THROW_ERROR("SetMonitorUserPointer takes 2 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("monitor is of type pointer!"); }
-	GLFWmonitor* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWmonitor*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	GLFWmonitor* monitor;
+	if(args[0]->IsNullOrUndefined()) { monitor = NULL; }
+	else { monitor = reinterpret_cast<GLFWmonitor*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
 	if(!args[1]->IsNumber() && !args[1]->IsNullOrUndefined()) { THROW_TYPE_ERROR("pointer is of type pointer!"); }
-	void* arg1;
-	if(args[1]->IsNullOrUndefined()) { arg1 = NULL; }
-	else { arg1 = reinterpret_cast<void*>(args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	glfwSetMonitorUserPointer(arg0, arg1);
+	void* pointer;
+	if(args[1]->IsNullOrUndefined()) { pointer = NULL; }
+	else { pointer = reinterpret_cast<void*>(args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	glfwSetMonitorUserPointer(monitor, pointer);
 }
 NATIVE_FUNCTION(GetMonitorUserPointer) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 1) { THROW_ERROR("GetMonitorUserPointer takes 1 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("monitor is of type pointer!"); }
-	GLFWmonitor* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWmonitor*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	void* ret = glfwGetMonitorUserPointer(arg0);
+	GLFWmonitor* monitor;
+	if(args[0]->IsNullOrUndefined()) { monitor = NULL; }
+	else { monitor = reinterpret_cast<GLFWmonitor*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	void* ret = glfwGetMonitorUserPointer(monitor);
 	RETURN(TO_NUMBER((uint64_t)ret));
 }
 NATIVE_FUNCTION(SetMonitorCallback) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 1) { THROW_ERROR("SetMonitorCallback takes 1 arguments."); }
-	//!UNKNOWN TYPE for arg0 (type: 'GLFWmonitorfun')!//
-	glfwSetMonitorCallback(arg0);
+	//!UNKNOWN TYPE for callback (type: 'GLFWmonitorfun')!//
+	glfwSetMonitorCallback(callback);
 }
 NATIVE_FUNCTION(GetVideoModes) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 2) { THROW_ERROR("GetVideoModes takes 2 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("monitor is of type pointer!"); }
-	GLFWmonitor* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWmonitor*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	//!UNKNOWN TYPE for arg1 (type: 'int*')!//
-	const GLFWvidmode* ret = glfwGetVideoModes(arg0, arg1);
+	GLFWmonitor* monitor;
+	if(args[0]->IsNullOrUndefined()) { monitor = NULL; }
+	else { monitor = reinterpret_cast<GLFWmonitor*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	//!UNKNOWN TYPE for count (type: 'int*')!//
+	const GLFWvidmode* ret = glfwGetVideoModes(monitor, count);
 	RETURN(_fromGLFWvidmode(ret));
 }
 NATIVE_FUNCTION(GetVideoMode) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 1) { THROW_ERROR("GetVideoMode takes 1 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("monitor is of type pointer!"); }
-	GLFWmonitor* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWmonitor*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	const GLFWvidmode* ret = glfwGetVideoMode(arg0);
+	GLFWmonitor* monitor;
+	if(args[0]->IsNullOrUndefined()) { monitor = NULL; }
+	else { monitor = reinterpret_cast<GLFWmonitor*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	const GLFWvidmode* ret = glfwGetVideoMode(monitor);
 	RETURN(_fromGLFWvidmode(ret));
 }
 NATIVE_FUNCTION(SetGamma) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 2) { THROW_ERROR("SetGamma takes 2 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("monitor is of type pointer!"); }
-	GLFWmonitor* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWmonitor*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	GLFWmonitor* monitor;
+	if(args[0]->IsNullOrUndefined()) { monitor = NULL; }
+	else { monitor = reinterpret_cast<GLFWmonitor*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
 	if(!args[1]->IsNumber()) { THROW_TYPE_ERROR("gamma is of type number!"); }
-	float arg1 = args[1]->NumberValue(isolate->GetCurrentContext()).FromMaybe(0);
-	glfwSetGamma(arg0, arg1);
+	float gamma = args[1]->NumberValue(isolate->GetCurrentContext()).FromMaybe(0);
+	glfwSetGamma(monitor, gamma);
 }
 NATIVE_FUNCTION(GetGammaRamp) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 1) { THROW_ERROR("GetGammaRamp takes 1 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("monitor is of type pointer!"); }
-	GLFWmonitor* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWmonitor*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	const GLFWgammaramp* ret = glfwGetGammaRamp(arg0);
+	GLFWmonitor* monitor;
+	if(args[0]->IsNullOrUndefined()) { monitor = NULL; }
+	else { monitor = reinterpret_cast<GLFWmonitor*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	const GLFWgammaramp* ret = glfwGetGammaRamp(monitor);
 	RETURN(_fromGLFWgammaramp(ret));
 }
 NATIVE_FUNCTION(SetGammaRamp) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 2) { THROW_ERROR("SetGammaRamp takes 2 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("monitor is of type pointer!"); }
-	GLFWmonitor* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWmonitor*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	//!UNKNOWN TYPE for arg1 (type: 'const GLFWgammaramp*')!//
-	glfwSetGammaRamp(arg0, arg1);
+	GLFWmonitor* monitor;
+	if(args[0]->IsNullOrUndefined()) { monitor = NULL; }
+	else { monitor = reinterpret_cast<GLFWmonitor*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	//!UNKNOWN TYPE for ramp (type: 'const GLFWgammaramp*')!//
+	glfwSetGammaRamp(monitor, ramp);
 }
 NATIVE_FUNCTION(DefaultWindowHints) {
 	glfwDefaultWindowHints();
@@ -293,460 +293,460 @@ NATIVE_FUNCTION(WindowHint) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 2) { THROW_ERROR("WindowHint takes 2 arguments."); }
 	if(!args[0]->IsNumber()) { THROW_TYPE_ERROR("hint is of type number!"); }
-	int arg0 = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	int hint = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
 	if(!args[1]->IsNumber()) { THROW_TYPE_ERROR("value is of type number!"); }
-	int arg1 = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
-	glfwWindowHint(arg0, arg1);
+	int value = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	glfwWindowHint(hint, value);
 }
 NATIVE_FUNCTION(WindowHintString) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 2) { THROW_ERROR("WindowHintString takes 2 arguments."); }
 	if(!args[0]->IsNumber()) { THROW_TYPE_ERROR("hint is of type number!"); }
-	int arg0 = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	int hint = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
 	if(!args[1]->IsString()) { THROW_TYPE_ERROR("value is of type string!"); }
-	const char* arg1 = (const char*)(*v8::String::Utf8Value(args[1]));
-	glfwWindowHintString(arg0, arg1);
+	const char* value = (const char*)(*v8::String::Utf8Value(args[1]));
+	glfwWindowHintString(hint, value);
 }
 NATIVE_FUNCTION(CreateWindow) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 5) { THROW_ERROR("CreateWindow takes 5 arguments."); }
 	if(!args[0]->IsNumber()) { THROW_TYPE_ERROR("width is of type number!"); }
-	int arg0 = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	int width = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
 	if(!args[1]->IsNumber()) { THROW_TYPE_ERROR("height is of type number!"); }
-	int arg1 = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	int height = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
 	if(!args[2]->IsString()) { THROW_TYPE_ERROR("title is of type string!"); }
-	const char* arg2 = (const char*)(*v8::String::Utf8Value(args[2]));
+	const char* title = (const char*)(*v8::String::Utf8Value(args[2]));
 	if(!args[3]->IsNumber() && !args[3]->IsNullOrUndefined()) { THROW_TYPE_ERROR("monitor is of type pointer!"); }
-	GLFWmonitor* arg3;
-	if(args[3]->IsNullOrUndefined()) { arg3 = NULL; }
-	else { arg3 = reinterpret_cast<GLFWmonitor*>(args[3]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	GLFWmonitor* monitor;
+	if(args[3]->IsNullOrUndefined()) { monitor = NULL; }
+	else { monitor = reinterpret_cast<GLFWmonitor*>(args[3]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
 	if(!args[4]->IsNumber() && !args[4]->IsNullOrUndefined()) { THROW_TYPE_ERROR("share is of type pointer!"); }
-	GLFWwindow* arg4;
-	if(args[4]->IsNullOrUndefined()) { arg4 = NULL; }
-	else { arg4 = reinterpret_cast<GLFWwindow*>(args[4]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	GLFWwindow* ret = glfwCreateWindow(arg0, arg1, arg2, arg3, arg4);
+	GLFWwindow* share;
+	if(args[4]->IsNullOrUndefined()) { share = NULL; }
+	else { share = reinterpret_cast<GLFWwindow*>(args[4]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	GLFWwindow* ret = glfwCreateWindow(width, height, title, monitor, share);
 	RETURN(TO_NUMBER((uint64_t)ret));
 }
 NATIVE_FUNCTION(DestroyWindow) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 1) { THROW_ERROR("DestroyWindow takes 1 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	glfwDestroyWindow(arg0);
+	GLFWwindow* window;
+	if(args[0]->IsNullOrUndefined()) { window = NULL; }
+	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	glfwDestroyWindow(window);
 }
 NATIVE_FUNCTION(WindowShouldClose) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 1) { THROW_ERROR("WindowShouldClose takes 1 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	int ret = glfwWindowShouldClose(arg0);
+	GLFWwindow* window;
+	if(args[0]->IsNullOrUndefined()) { window = NULL; }
+	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	int ret = glfwWindowShouldClose(window);
 	RETURN(TO_NUMBER(ret));
 }
 NATIVE_FUNCTION(SetWindowShouldClose) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 2) { THROW_ERROR("SetWindowShouldClose takes 2 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	GLFWwindow* window;
+	if(args[0]->IsNullOrUndefined()) { window = NULL; }
+	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
 	if(!args[1]->IsNumber()) { THROW_TYPE_ERROR("value is of type number!"); }
-	int arg1 = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
-	glfwSetWindowShouldClose(arg0, arg1);
+	int value = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	glfwSetWindowShouldClose(window, value);
 }
 NATIVE_FUNCTION(SetWindowTitle) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 2) { THROW_ERROR("SetWindowTitle takes 2 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	GLFWwindow* window;
+	if(args[0]->IsNullOrUndefined()) { window = NULL; }
+	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
 	if(!args[1]->IsString()) { THROW_TYPE_ERROR("title is of type string!"); }
-	const char* arg1 = (const char*)(*v8::String::Utf8Value(args[1]));
-	glfwSetWindowTitle(arg0, arg1);
+	const char* title = (const char*)(*v8::String::Utf8Value(args[1]));
+	glfwSetWindowTitle(window, title);
 }
 NATIVE_FUNCTION(SetWindowIcon) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 3) { THROW_ERROR("SetWindowIcon takes 3 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	GLFWwindow* window;
+	if(args[0]->IsNullOrUndefined()) { window = NULL; }
+	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
 	if(!args[1]->IsNumber()) { THROW_TYPE_ERROR("count is of type number!"); }
-	int arg1 = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
-	//!UNKNOWN TYPE for arg2 (type: 'const GLFWimage*')!//
-	glfwSetWindowIcon(arg0, arg1, arg2);
+	int count = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	//!UNKNOWN TYPE for images (type: 'const GLFWimage*')!//
+	glfwSetWindowIcon(window, count, images);
 }
 NATIVE_FUNCTION(GetWindowPos) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 3) { THROW_ERROR("GetWindowPos takes 3 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	//!UNKNOWN TYPE for arg1 (type: 'int*')!//
-	//!UNKNOWN TYPE for arg2 (type: 'int*')!//
-	glfwGetWindowPos(arg0, arg1, arg2);
+	GLFWwindow* window;
+	if(args[0]->IsNullOrUndefined()) { window = NULL; }
+	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	//!UNKNOWN TYPE for xpos (type: 'int*')!//
+	//!UNKNOWN TYPE for ypos (type: 'int*')!//
+	glfwGetWindowPos(window, xpos, ypos);
 }
 NATIVE_FUNCTION(SetWindowPos) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 3) { THROW_ERROR("SetWindowPos takes 3 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	GLFWwindow* window;
+	if(args[0]->IsNullOrUndefined()) { window = NULL; }
+	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
 	if(!args[1]->IsNumber()) { THROW_TYPE_ERROR("xpos is of type number!"); }
-	int arg1 = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	int xpos = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
 	if(!args[2]->IsNumber()) { THROW_TYPE_ERROR("ypos is of type number!"); }
-	int arg2 = args[2]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
-	glfwSetWindowPos(arg0, arg1, arg2);
+	int ypos = args[2]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	glfwSetWindowPos(window, xpos, ypos);
 }
 NATIVE_FUNCTION(GetWindowSize) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 3) { THROW_ERROR("GetWindowSize takes 3 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	//!UNKNOWN TYPE for arg1 (type: 'int*')!//
-	//!UNKNOWN TYPE for arg2 (type: 'int*')!//
-	glfwGetWindowSize(arg0, arg1, arg2);
+	GLFWwindow* window;
+	if(args[0]->IsNullOrUndefined()) { window = NULL; }
+	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	//!UNKNOWN TYPE for width (type: 'int*')!//
+	//!UNKNOWN TYPE for height (type: 'int*')!//
+	glfwGetWindowSize(window, width, height);
 }
 NATIVE_FUNCTION(SetWindowSizeLimits) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 5) { THROW_ERROR("SetWindowSizeLimits takes 5 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	GLFWwindow* window;
+	if(args[0]->IsNullOrUndefined()) { window = NULL; }
+	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
 	if(!args[1]->IsNumber()) { THROW_TYPE_ERROR("minwidth is of type number!"); }
-	int arg1 = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	int minwidth = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
 	if(!args[2]->IsNumber()) { THROW_TYPE_ERROR("minheight is of type number!"); }
-	int arg2 = args[2]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	int minheight = args[2]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
 	if(!args[3]->IsNumber()) { THROW_TYPE_ERROR("maxwidth is of type number!"); }
-	int arg3 = args[3]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	int maxwidth = args[3]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
 	if(!args[4]->IsNumber()) { THROW_TYPE_ERROR("maxheight is of type number!"); }
-	int arg4 = args[4]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
-	glfwSetWindowSizeLimits(arg0, arg1, arg2, arg3, arg4);
+	int maxheight = args[4]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	glfwSetWindowSizeLimits(window, minwidth, minheight, maxwidth, maxheight);
 }
 NATIVE_FUNCTION(SetWindowAspectRatio) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 3) { THROW_ERROR("SetWindowAspectRatio takes 3 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	GLFWwindow* window;
+	if(args[0]->IsNullOrUndefined()) { window = NULL; }
+	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
 	if(!args[1]->IsNumber()) { THROW_TYPE_ERROR("numer is of type number!"); }
-	int arg1 = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	int numer = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
 	if(!args[2]->IsNumber()) { THROW_TYPE_ERROR("denom is of type number!"); }
-	int arg2 = args[2]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
-	glfwSetWindowAspectRatio(arg0, arg1, arg2);
+	int denom = args[2]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	glfwSetWindowAspectRatio(window, numer, denom);
 }
 NATIVE_FUNCTION(SetWindowSize) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 3) { THROW_ERROR("SetWindowSize takes 3 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	GLFWwindow* window;
+	if(args[0]->IsNullOrUndefined()) { window = NULL; }
+	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
 	if(!args[1]->IsNumber()) { THROW_TYPE_ERROR("width is of type number!"); }
-	int arg1 = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	int width = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
 	if(!args[2]->IsNumber()) { THROW_TYPE_ERROR("height is of type number!"); }
-	int arg2 = args[2]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
-	glfwSetWindowSize(arg0, arg1, arg2);
+	int height = args[2]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	glfwSetWindowSize(window, width, height);
 }
 NATIVE_FUNCTION(GetFramebufferSize) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 3) { THROW_ERROR("GetFramebufferSize takes 3 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	//!UNKNOWN TYPE for arg1 (type: 'int*')!//
-	//!UNKNOWN TYPE for arg2 (type: 'int*')!//
-	glfwGetFramebufferSize(arg0, arg1, arg2);
+	GLFWwindow* window;
+	if(args[0]->IsNullOrUndefined()) { window = NULL; }
+	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	//!UNKNOWN TYPE for width (type: 'int*')!//
+	//!UNKNOWN TYPE for height (type: 'int*')!//
+	glfwGetFramebufferSize(window, width, height);
 }
 NATIVE_FUNCTION(GetWindowFrameSize) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 5) { THROW_ERROR("GetWindowFrameSize takes 5 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	//!UNKNOWN TYPE for arg1 (type: 'int*')!//
-	//!UNKNOWN TYPE for arg2 (type: 'int*')!//
-	//!UNKNOWN TYPE for arg3 (type: 'int*')!//
-	//!UNKNOWN TYPE for arg4 (type: 'int*')!//
-	glfwGetWindowFrameSize(arg0, arg1, arg2, arg3, arg4);
+	GLFWwindow* window;
+	if(args[0]->IsNullOrUndefined()) { window = NULL; }
+	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	//!UNKNOWN TYPE for left (type: 'int*')!//
+	//!UNKNOWN TYPE for top (type: 'int*')!//
+	//!UNKNOWN TYPE for right (type: 'int*')!//
+	//!UNKNOWN TYPE for bottom (type: 'int*')!//
+	glfwGetWindowFrameSize(window, left, top, right, bottom);
 }
 NATIVE_FUNCTION(GetWindowContentScale) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 3) { THROW_ERROR("GetWindowContentScale takes 3 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	//!UNKNOWN TYPE for arg1 (type: 'float*')!//
-	//!UNKNOWN TYPE for arg2 (type: 'float*')!//
-	glfwGetWindowContentScale(arg0, arg1, arg2);
+	GLFWwindow* window;
+	if(args[0]->IsNullOrUndefined()) { window = NULL; }
+	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	//!UNKNOWN TYPE for xscale (type: 'float*')!//
+	//!UNKNOWN TYPE for yscale (type: 'float*')!//
+	glfwGetWindowContentScale(window, xscale, yscale);
 }
 NATIVE_FUNCTION(GetWindowOpacity) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 1) { THROW_ERROR("GetWindowOpacity takes 1 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	float ret = glfwGetWindowOpacity(arg0);
+	GLFWwindow* window;
+	if(args[0]->IsNullOrUndefined()) { window = NULL; }
+	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	float ret = glfwGetWindowOpacity(window);
 	RETURN(TO_NUMBER(ret));
 }
 NATIVE_FUNCTION(SetWindowOpacity) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 2) { THROW_ERROR("SetWindowOpacity takes 2 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	GLFWwindow* window;
+	if(args[0]->IsNullOrUndefined()) { window = NULL; }
+	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
 	if(!args[1]->IsNumber()) { THROW_TYPE_ERROR("opacity is of type number!"); }
-	float arg1 = args[1]->NumberValue(isolate->GetCurrentContext()).FromMaybe(0);
-	glfwSetWindowOpacity(arg0, arg1);
+	float opacity = args[1]->NumberValue(isolate->GetCurrentContext()).FromMaybe(0);
+	glfwSetWindowOpacity(window, opacity);
 }
 NATIVE_FUNCTION(IconifyWindow) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 1) { THROW_ERROR("IconifyWindow takes 1 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	glfwIconifyWindow(arg0);
+	GLFWwindow* window;
+	if(args[0]->IsNullOrUndefined()) { window = NULL; }
+	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	glfwIconifyWindow(window);
 }
 NATIVE_FUNCTION(RestoreWindow) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 1) { THROW_ERROR("RestoreWindow takes 1 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	glfwRestoreWindow(arg0);
+	GLFWwindow* window;
+	if(args[0]->IsNullOrUndefined()) { window = NULL; }
+	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	glfwRestoreWindow(window);
 }
 NATIVE_FUNCTION(MaximizeWindow) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 1) { THROW_ERROR("MaximizeWindow takes 1 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	glfwMaximizeWindow(arg0);
+	GLFWwindow* window;
+	if(args[0]->IsNullOrUndefined()) { window = NULL; }
+	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	glfwMaximizeWindow(window);
 }
 NATIVE_FUNCTION(ShowWindow) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 1) { THROW_ERROR("ShowWindow takes 1 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	glfwShowWindow(arg0);
+	GLFWwindow* window;
+	if(args[0]->IsNullOrUndefined()) { window = NULL; }
+	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	glfwShowWindow(window);
 }
 NATIVE_FUNCTION(HideWindow) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 1) { THROW_ERROR("HideWindow takes 1 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	glfwHideWindow(arg0);
+	GLFWwindow* window;
+	if(args[0]->IsNullOrUndefined()) { window = NULL; }
+	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	glfwHideWindow(window);
 }
 NATIVE_FUNCTION(FocusWindow) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 1) { THROW_ERROR("FocusWindow takes 1 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	glfwFocusWindow(arg0);
+	GLFWwindow* window;
+	if(args[0]->IsNullOrUndefined()) { window = NULL; }
+	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	glfwFocusWindow(window);
 }
 NATIVE_FUNCTION(RequestWindowAttention) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 1) { THROW_ERROR("RequestWindowAttention takes 1 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	glfwRequestWindowAttention(arg0);
+	GLFWwindow* window;
+	if(args[0]->IsNullOrUndefined()) { window = NULL; }
+	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	glfwRequestWindowAttention(window);
 }
 NATIVE_FUNCTION(GetWindowMonitor) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 1) { THROW_ERROR("GetWindowMonitor takes 1 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	GLFWmonitor* ret = glfwGetWindowMonitor(arg0);
+	GLFWwindow* window;
+	if(args[0]->IsNullOrUndefined()) { window = NULL; }
+	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	GLFWmonitor* ret = glfwGetWindowMonitor(window);
 	RETURN(TO_NUMBER((uint64_t)ret));
 }
 NATIVE_FUNCTION(SetWindowMonitor) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 7) { THROW_ERROR("SetWindowMonitor takes 7 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	GLFWwindow* window;
+	if(args[0]->IsNullOrUndefined()) { window = NULL; }
+	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
 	if(!args[1]->IsNumber() && !args[1]->IsNullOrUndefined()) { THROW_TYPE_ERROR("monitor is of type pointer!"); }
-	GLFWmonitor* arg1;
-	if(args[1]->IsNullOrUndefined()) { arg1 = NULL; }
-	else { arg1 = reinterpret_cast<GLFWmonitor*>(args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	GLFWmonitor* monitor;
+	if(args[1]->IsNullOrUndefined()) { monitor = NULL; }
+	else { monitor = reinterpret_cast<GLFWmonitor*>(args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
 	if(!args[2]->IsNumber()) { THROW_TYPE_ERROR("xpos is of type number!"); }
-	int arg2 = args[2]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	int xpos = args[2]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
 	if(!args[3]->IsNumber()) { THROW_TYPE_ERROR("ypos is of type number!"); }
-	int arg3 = args[3]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	int ypos = args[3]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
 	if(!args[4]->IsNumber()) { THROW_TYPE_ERROR("width is of type number!"); }
-	int arg4 = args[4]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	int width = args[4]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
 	if(!args[5]->IsNumber()) { THROW_TYPE_ERROR("height is of type number!"); }
-	int arg5 = args[5]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	int height = args[5]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
 	if(!args[6]->IsNumber()) { THROW_TYPE_ERROR("refreshRate is of type number!"); }
-	int arg6 = args[6]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
-	glfwSetWindowMonitor(arg0, arg1, arg2, arg3, arg4, arg5, arg6);
+	int refreshRate = args[6]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	glfwSetWindowMonitor(window, monitor, xpos, ypos, width, height, refreshRate);
 }
 NATIVE_FUNCTION(GetWindowAttrib) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 2) { THROW_ERROR("GetWindowAttrib takes 2 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	GLFWwindow* window;
+	if(args[0]->IsNullOrUndefined()) { window = NULL; }
+	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
 	if(!args[1]->IsNumber()) { THROW_TYPE_ERROR("attrib is of type number!"); }
-	int arg1 = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
-	int ret = glfwGetWindowAttrib(arg0, arg1);
+	int attrib = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	int ret = glfwGetWindowAttrib(window, attrib);
 	RETURN(TO_NUMBER(ret));
 }
 NATIVE_FUNCTION(SetWindowAttrib) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 3) { THROW_ERROR("SetWindowAttrib takes 3 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	GLFWwindow* window;
+	if(args[0]->IsNullOrUndefined()) { window = NULL; }
+	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
 	if(!args[1]->IsNumber()) { THROW_TYPE_ERROR("attrib is of type number!"); }
-	int arg1 = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	int attrib = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
 	if(!args[2]->IsNumber()) { THROW_TYPE_ERROR("value is of type number!"); }
-	int arg2 = args[2]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
-	glfwSetWindowAttrib(arg0, arg1, arg2);
+	int value = args[2]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	glfwSetWindowAttrib(window, attrib, value);
 }
 NATIVE_FUNCTION(SetWindowUserPointer) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 2) { THROW_ERROR("SetWindowUserPointer takes 2 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	GLFWwindow* window;
+	if(args[0]->IsNullOrUndefined()) { window = NULL; }
+	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
 	if(!args[1]->IsNumber() && !args[1]->IsNullOrUndefined()) { THROW_TYPE_ERROR("pointer is of type pointer!"); }
-	void* arg1;
-	if(args[1]->IsNullOrUndefined()) { arg1 = NULL; }
-	else { arg1 = reinterpret_cast<void*>(args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	glfwSetWindowUserPointer(arg0, arg1);
+	void* pointer;
+	if(args[1]->IsNullOrUndefined()) { pointer = NULL; }
+	else { pointer = reinterpret_cast<void*>(args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	glfwSetWindowUserPointer(window, pointer);
 }
 NATIVE_FUNCTION(GetWindowUserPointer) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 1) { THROW_ERROR("GetWindowUserPointer takes 1 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	void* ret = glfwGetWindowUserPointer(arg0);
+	GLFWwindow* window;
+	if(args[0]->IsNullOrUndefined()) { window = NULL; }
+	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	void* ret = glfwGetWindowUserPointer(window);
 	RETURN(TO_NUMBER((uint64_t)ret));
 }
 NATIVE_FUNCTION(SetWindowPosCallback) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 2) { THROW_ERROR("SetWindowPosCallback takes 2 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	//!UNKNOWN TYPE for arg1 (type: 'GLFWwindowposfun')!//
-	glfwSetWindowPosCallback(arg0, arg1);
+	GLFWwindow* window;
+	if(args[0]->IsNullOrUndefined()) { window = NULL; }
+	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	//!UNKNOWN TYPE for callback (type: 'GLFWwindowposfun')!//
+	glfwSetWindowPosCallback(window, callback);
 }
 NATIVE_FUNCTION(SetWindowSizeCallback) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 2) { THROW_ERROR("SetWindowSizeCallback takes 2 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	//!UNKNOWN TYPE for arg1 (type: 'GLFWwindowsizefun')!//
-	glfwSetWindowSizeCallback(arg0, arg1);
+	GLFWwindow* window;
+	if(args[0]->IsNullOrUndefined()) { window = NULL; }
+	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	//!UNKNOWN TYPE for callback (type: 'GLFWwindowsizefun')!//
+	glfwSetWindowSizeCallback(window, callback);
 }
 NATIVE_FUNCTION(SetWindowCloseCallback) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 2) { THROW_ERROR("SetWindowCloseCallback takes 2 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	//!UNKNOWN TYPE for arg1 (type: 'GLFWwindowclosefun')!//
-	glfwSetWindowCloseCallback(arg0, arg1);
+	GLFWwindow* window;
+	if(args[0]->IsNullOrUndefined()) { window = NULL; }
+	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	//!UNKNOWN TYPE for callback (type: 'GLFWwindowclosefun')!//
+	glfwSetWindowCloseCallback(window, callback);
 }
 NATIVE_FUNCTION(SetWindowRefreshCallback) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 2) { THROW_ERROR("SetWindowRefreshCallback takes 2 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	//!UNKNOWN TYPE for arg1 (type: 'GLFWwindowrefreshfun')!//
-	glfwSetWindowRefreshCallback(arg0, arg1);
+	GLFWwindow* window;
+	if(args[0]->IsNullOrUndefined()) { window = NULL; }
+	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	//!UNKNOWN TYPE for callback (type: 'GLFWwindowrefreshfun')!//
+	glfwSetWindowRefreshCallback(window, callback);
 }
 NATIVE_FUNCTION(SetWindowFocusCallback) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 2) { THROW_ERROR("SetWindowFocusCallback takes 2 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	//!UNKNOWN TYPE for arg1 (type: 'GLFWwindowfocusfun')!//
-	glfwSetWindowFocusCallback(arg0, arg1);
+	GLFWwindow* window;
+	if(args[0]->IsNullOrUndefined()) { window = NULL; }
+	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	//!UNKNOWN TYPE for callback (type: 'GLFWwindowfocusfun')!//
+	glfwSetWindowFocusCallback(window, callback);
 }
 NATIVE_FUNCTION(SetWindowIconifyCallback) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 2) { THROW_ERROR("SetWindowIconifyCallback takes 2 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	//!UNKNOWN TYPE for arg1 (type: 'GLFWwindowiconifyfun')!//
-	glfwSetWindowIconifyCallback(arg0, arg1);
+	GLFWwindow* window;
+	if(args[0]->IsNullOrUndefined()) { window = NULL; }
+	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	//!UNKNOWN TYPE for callback (type: 'GLFWwindowiconifyfun')!//
+	glfwSetWindowIconifyCallback(window, callback);
 }
 NATIVE_FUNCTION(SetWindowMaximizeCallback) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 2) { THROW_ERROR("SetWindowMaximizeCallback takes 2 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	//!UNKNOWN TYPE for arg1 (type: 'GLFWwindowmaximizefun')!//
-	glfwSetWindowMaximizeCallback(arg0, arg1);
+	GLFWwindow* window;
+	if(args[0]->IsNullOrUndefined()) { window = NULL; }
+	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	//!UNKNOWN TYPE for callback (type: 'GLFWwindowmaximizefun')!//
+	glfwSetWindowMaximizeCallback(window, callback);
 }
 NATIVE_FUNCTION(SetFramebufferSizeCallback) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 2) { THROW_ERROR("SetFramebufferSizeCallback takes 2 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	//!UNKNOWN TYPE for arg1 (type: 'GLFWframebuffersizefun')!//
-	glfwSetFramebufferSizeCallback(arg0, arg1);
+	GLFWwindow* window;
+	if(args[0]->IsNullOrUndefined()) { window = NULL; }
+	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	//!UNKNOWN TYPE for callback (type: 'GLFWframebuffersizefun')!//
+	glfwSetFramebufferSizeCallback(window, callback);
 }
 NATIVE_FUNCTION(SetWindowContentScaleCallback) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 2) { THROW_ERROR("SetWindowContentScaleCallback takes 2 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	//!UNKNOWN TYPE for arg1 (type: 'GLFWwindowcontentscalefun')!//
-	glfwSetWindowContentScaleCallback(arg0, arg1);
+	GLFWwindow* window;
+	if(args[0]->IsNullOrUndefined()) { window = NULL; }
+	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	//!UNKNOWN TYPE for callback (type: 'GLFWwindowcontentscalefun')!//
+	glfwSetWindowContentScaleCallback(window, callback);
 }
 NATIVE_FUNCTION(PollEvents) {
 	glfwPollEvents();
@@ -758,8 +758,8 @@ NATIVE_FUNCTION(WaitEventsTimeout) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 1) { THROW_ERROR("WaitEventsTimeout takes 1 arguments."); }
 	if(!args[0]->IsNumber()) { THROW_TYPE_ERROR("timeout is of type number!"); }
-	double arg0 = args[0]->NumberValue(isolate->GetCurrentContext()).FromMaybe(0);
-	glfwWaitEventsTimeout(arg0);
+	double timeout = args[0]->NumberValue(isolate->GetCurrentContext()).FromMaybe(0);
+	glfwWaitEventsTimeout(timeout);
 }
 NATIVE_FUNCTION(PostEmptyEvent) {
 	glfwPostEmptyEvent();
@@ -768,26 +768,26 @@ NATIVE_FUNCTION(GetInputMode) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 2) { THROW_ERROR("GetInputMode takes 2 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	GLFWwindow* window;
+	if(args[0]->IsNullOrUndefined()) { window = NULL; }
+	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
 	if(!args[1]->IsNumber()) { THROW_TYPE_ERROR("mode is of type number!"); }
-	int arg1 = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
-	int ret = glfwGetInputMode(arg0, arg1);
+	int mode = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	int ret = glfwGetInputMode(window, mode);
 	RETURN(TO_NUMBER(ret));
 }
 NATIVE_FUNCTION(SetInputMode) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 3) { THROW_ERROR("SetInputMode takes 3 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	GLFWwindow* window;
+	if(args[0]->IsNullOrUndefined()) { window = NULL; }
+	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
 	if(!args[1]->IsNumber()) { THROW_TYPE_ERROR("mode is of type number!"); }
-	int arg1 = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	int mode = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
 	if(!args[2]->IsNumber()) { THROW_TYPE_ERROR("value is of type number!"); }
-	int arg2 = args[2]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
-	glfwSetInputMode(arg0, arg1, arg2);
+	int value = args[2]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	glfwSetInputMode(window, mode, value);
 }
 NATIVE_FUNCTION(RawMouseMotionSupported) {
 	v8::Isolate* isolate = args.GetIsolate();
@@ -798,317 +798,317 @@ NATIVE_FUNCTION(GetKeyName) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 2) { THROW_ERROR("GetKeyName takes 2 arguments."); }
 	if(!args[0]->IsNumber()) { THROW_TYPE_ERROR("key is of type number!"); }
-	int arg0 = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	int key = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
 	if(!args[1]->IsNumber()) { THROW_TYPE_ERROR("scancode is of type number!"); }
-	int arg1 = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
-	const char* ret = glfwGetKeyName(arg0, arg1);
+	int scancode = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	const char* ret = glfwGetKeyName(key, scancode);
 	RETURN(TO_STRING(ret));
 }
 NATIVE_FUNCTION(GetKeyScancode) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 1) { THROW_ERROR("GetKeyScancode takes 1 arguments."); }
 	if(!args[0]->IsNumber()) { THROW_TYPE_ERROR("key is of type number!"); }
-	int arg0 = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
-	int ret = glfwGetKeyScancode(arg0);
+	int key = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	int ret = glfwGetKeyScancode(key);
 	RETURN(TO_NUMBER(ret));
 }
 NATIVE_FUNCTION(GetKey) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 2) { THROW_ERROR("GetKey takes 2 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	GLFWwindow* window;
+	if(args[0]->IsNullOrUndefined()) { window = NULL; }
+	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
 	if(!args[1]->IsNumber()) { THROW_TYPE_ERROR("key is of type number!"); }
-	int arg1 = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
-	int ret = glfwGetKey(arg0, arg1);
+	int key = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	int ret = glfwGetKey(window, key);
 	RETURN(TO_NUMBER(ret));
 }
 NATIVE_FUNCTION(GetMouseButton) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 2) { THROW_ERROR("GetMouseButton takes 2 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	GLFWwindow* window;
+	if(args[0]->IsNullOrUndefined()) { window = NULL; }
+	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
 	if(!args[1]->IsNumber()) { THROW_TYPE_ERROR("button is of type number!"); }
-	int arg1 = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
-	int ret = glfwGetMouseButton(arg0, arg1);
+	int button = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	int ret = glfwGetMouseButton(window, button);
 	RETURN(TO_NUMBER(ret));
 }
 NATIVE_FUNCTION(GetCursorPos) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 3) { THROW_ERROR("GetCursorPos takes 3 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	//!UNKNOWN TYPE for arg1 (type: 'double*')!//
-	//!UNKNOWN TYPE for arg2 (type: 'double*')!//
-	glfwGetCursorPos(arg0, arg1, arg2);
+	GLFWwindow* window;
+	if(args[0]->IsNullOrUndefined()) { window = NULL; }
+	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	//!UNKNOWN TYPE for xpos (type: 'double*')!//
+	//!UNKNOWN TYPE for ypos (type: 'double*')!//
+	glfwGetCursorPos(window, xpos, ypos);
 }
 NATIVE_FUNCTION(SetCursorPos) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 3) { THROW_ERROR("SetCursorPos takes 3 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	GLFWwindow* window;
+	if(args[0]->IsNullOrUndefined()) { window = NULL; }
+	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
 	if(!args[1]->IsNumber()) { THROW_TYPE_ERROR("xpos is of type number!"); }
-	double arg1 = args[1]->NumberValue(isolate->GetCurrentContext()).FromMaybe(0);
+	double xpos = args[1]->NumberValue(isolate->GetCurrentContext()).FromMaybe(0);
 	if(!args[2]->IsNumber()) { THROW_TYPE_ERROR("ypos is of type number!"); }
-	double arg2 = args[2]->NumberValue(isolate->GetCurrentContext()).FromMaybe(0);
-	glfwSetCursorPos(arg0, arg1, arg2);
+	double ypos = args[2]->NumberValue(isolate->GetCurrentContext()).FromMaybe(0);
+	glfwSetCursorPos(window, xpos, ypos);
 }
 NATIVE_FUNCTION(CreateCursor) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 3) { THROW_ERROR("CreateCursor takes 3 arguments."); }
-	//!UNKNOWN TYPE for arg0 (type: 'const GLFWimage*')!//
+	//!UNKNOWN TYPE for image (type: 'const GLFWimage*')!//
 	if(!args[1]->IsNumber()) { THROW_TYPE_ERROR("xhot is of type number!"); }
-	int arg1 = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	int xhot = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
 	if(!args[2]->IsNumber()) { THROW_TYPE_ERROR("yhot is of type number!"); }
-	int arg2 = args[2]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
-	GLFWcursor* ret = glfwCreateCursor(arg0, arg1, arg2);
+	int yhot = args[2]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	GLFWcursor* ret = glfwCreateCursor(image, xhot, yhot);
 	RETURN(TO_NUMBER((uint64_t)ret));
 }
 NATIVE_FUNCTION(CreateStandardCursor) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 1) { THROW_ERROR("CreateStandardCursor takes 1 arguments."); }
 	if(!args[0]->IsNumber()) { THROW_TYPE_ERROR("shape is of type number!"); }
-	int arg0 = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
-	GLFWcursor* ret = glfwCreateStandardCursor(arg0);
+	int shape = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	GLFWcursor* ret = glfwCreateStandardCursor(shape);
 	RETURN(TO_NUMBER((uint64_t)ret));
 }
 NATIVE_FUNCTION(DestroyCursor) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 1) { THROW_ERROR("DestroyCursor takes 1 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("cursor is of type pointer!"); }
-	GLFWcursor* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWcursor*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	glfwDestroyCursor(arg0);
+	GLFWcursor* cursor;
+	if(args[0]->IsNullOrUndefined()) { cursor = NULL; }
+	else { cursor = reinterpret_cast<GLFWcursor*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	glfwDestroyCursor(cursor);
 }
 NATIVE_FUNCTION(SetCursor) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 2) { THROW_ERROR("SetCursor takes 2 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	GLFWwindow* window;
+	if(args[0]->IsNullOrUndefined()) { window = NULL; }
+	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
 	if(!args[1]->IsNumber() && !args[1]->IsNullOrUndefined()) { THROW_TYPE_ERROR("cursor is of type pointer!"); }
-	GLFWcursor* arg1;
-	if(args[1]->IsNullOrUndefined()) { arg1 = NULL; }
-	else { arg1 = reinterpret_cast<GLFWcursor*>(args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	glfwSetCursor(arg0, arg1);
+	GLFWcursor* cursor;
+	if(args[1]->IsNullOrUndefined()) { cursor = NULL; }
+	else { cursor = reinterpret_cast<GLFWcursor*>(args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	glfwSetCursor(window, cursor);
 }
 NATIVE_FUNCTION(SetKeyCallback) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 2) { THROW_ERROR("SetKeyCallback takes 2 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	//!UNKNOWN TYPE for arg1 (type: 'GLFWkeyfun')!//
-	glfwSetKeyCallback(arg0, arg1);
+	GLFWwindow* window;
+	if(args[0]->IsNullOrUndefined()) { window = NULL; }
+	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	//!UNKNOWN TYPE for callback (type: 'GLFWkeyfun')!//
+	glfwSetKeyCallback(window, callback);
 }
 NATIVE_FUNCTION(SetCharCallback) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 2) { THROW_ERROR("SetCharCallback takes 2 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	//!UNKNOWN TYPE for arg1 (type: 'GLFWcharfun')!//
-	glfwSetCharCallback(arg0, arg1);
+	GLFWwindow* window;
+	if(args[0]->IsNullOrUndefined()) { window = NULL; }
+	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	//!UNKNOWN TYPE for callback (type: 'GLFWcharfun')!//
+	glfwSetCharCallback(window, callback);
 }
 NATIVE_FUNCTION(SetCharModsCallback) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 2) { THROW_ERROR("SetCharModsCallback takes 2 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	//!UNKNOWN TYPE for arg1 (type: 'GLFWcharmodsfun')!//
-	glfwSetCharModsCallback(arg0, arg1);
+	GLFWwindow* window;
+	if(args[0]->IsNullOrUndefined()) { window = NULL; }
+	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	//!UNKNOWN TYPE for callback (type: 'GLFWcharmodsfun')!//
+	glfwSetCharModsCallback(window, callback);
 }
 NATIVE_FUNCTION(SetMouseButtonCallback) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 2) { THROW_ERROR("SetMouseButtonCallback takes 2 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	//!UNKNOWN TYPE for arg1 (type: 'GLFWmousebuttonfun')!//
-	glfwSetMouseButtonCallback(arg0, arg1);
+	GLFWwindow* window;
+	if(args[0]->IsNullOrUndefined()) { window = NULL; }
+	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	//!UNKNOWN TYPE for callback (type: 'GLFWmousebuttonfun')!//
+	glfwSetMouseButtonCallback(window, callback);
 }
 NATIVE_FUNCTION(SetCursorPosCallback) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 2) { THROW_ERROR("SetCursorPosCallback takes 2 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	//!UNKNOWN TYPE for arg1 (type: 'GLFWcursorposfun')!//
-	glfwSetCursorPosCallback(arg0, arg1);
+	GLFWwindow* window;
+	if(args[0]->IsNullOrUndefined()) { window = NULL; }
+	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	//!UNKNOWN TYPE for callback (type: 'GLFWcursorposfun')!//
+	glfwSetCursorPosCallback(window, callback);
 }
 NATIVE_FUNCTION(SetCursorEnterCallback) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 2) { THROW_ERROR("SetCursorEnterCallback takes 2 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	//!UNKNOWN TYPE for arg1 (type: 'GLFWcursorenterfun')!//
-	glfwSetCursorEnterCallback(arg0, arg1);
+	GLFWwindow* window;
+	if(args[0]->IsNullOrUndefined()) { window = NULL; }
+	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	//!UNKNOWN TYPE for callback (type: 'GLFWcursorenterfun')!//
+	glfwSetCursorEnterCallback(window, callback);
 }
 NATIVE_FUNCTION(SetScrollCallback) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 2) { THROW_ERROR("SetScrollCallback takes 2 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	//!UNKNOWN TYPE for arg1 (type: 'GLFWscrollfun')!//
-	glfwSetScrollCallback(arg0, arg1);
+	GLFWwindow* window;
+	if(args[0]->IsNullOrUndefined()) { window = NULL; }
+	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	//!UNKNOWN TYPE for callback (type: 'GLFWscrollfun')!//
+	glfwSetScrollCallback(window, callback);
 }
 NATIVE_FUNCTION(SetDropCallback) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 2) { THROW_ERROR("SetDropCallback takes 2 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	//!UNKNOWN TYPE for arg1 (type: 'GLFWdropfun')!//
-	glfwSetDropCallback(arg0, arg1);
+	GLFWwindow* window;
+	if(args[0]->IsNullOrUndefined()) { window = NULL; }
+	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	//!UNKNOWN TYPE for callback (type: 'GLFWdropfun')!//
+	glfwSetDropCallback(window, callback);
 }
 NATIVE_FUNCTION(JoystickPresent) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 1) { THROW_ERROR("JoystickPresent takes 1 arguments."); }
 	if(!args[0]->IsNumber()) { THROW_TYPE_ERROR("jid is of type number!"); }
-	int arg0 = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
-	int ret = glfwJoystickPresent(arg0);
+	int jid = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	int ret = glfwJoystickPresent(jid);
 	RETURN(TO_NUMBER(ret));
 }
 NATIVE_FUNCTION(GetJoystickAxes) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 2) { THROW_ERROR("GetJoystickAxes takes 2 arguments."); }
 	if(!args[0]->IsNumber()) { THROW_TYPE_ERROR("jid is of type number!"); }
-	int arg0 = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
-	//!UNKNOWN TYPE for arg1 (type: 'int*')!//
-	const float* ret = glfwGetJoystickAxes(arg0, arg1);
+	int jid = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	//!UNKNOWN TYPE for count (type: 'int*')!//
+	const float* ret = glfwGetJoystickAxes(jid, count);
 	//!UNKNOWN RETURN TYPE for glfwGetJoystickAxes//
 }
 NATIVE_FUNCTION(GetJoystickButtons) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 2) { THROW_ERROR("GetJoystickButtons takes 2 arguments."); }
 	if(!args[0]->IsNumber()) { THROW_TYPE_ERROR("jid is of type number!"); }
-	int arg0 = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
-	//!UNKNOWN TYPE for arg1 (type: 'int*')!//
-	const unsigned char* ret = glfwGetJoystickButtons(arg0, arg1);
+	int jid = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	//!UNKNOWN TYPE for count (type: 'int*')!//
+	const unsigned char* ret = glfwGetJoystickButtons(jid, count);
 	//!UNKNOWN RETURN TYPE for glfwGetJoystickButtons//
 }
 NATIVE_FUNCTION(GetJoystickHats) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 2) { THROW_ERROR("GetJoystickHats takes 2 arguments."); }
 	if(!args[0]->IsNumber()) { THROW_TYPE_ERROR("jid is of type number!"); }
-	int arg0 = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
-	//!UNKNOWN TYPE for arg1 (type: 'int*')!//
-	const unsigned char* ret = glfwGetJoystickHats(arg0, arg1);
+	int jid = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	//!UNKNOWN TYPE for count (type: 'int*')!//
+	const unsigned char* ret = glfwGetJoystickHats(jid, count);
 	//!UNKNOWN RETURN TYPE for glfwGetJoystickHats//
 }
 NATIVE_FUNCTION(GetJoystickName) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 1) { THROW_ERROR("GetJoystickName takes 1 arguments."); }
 	if(!args[0]->IsNumber()) { THROW_TYPE_ERROR("jid is of type number!"); }
-	int arg0 = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
-	const char* ret = glfwGetJoystickName(arg0);
+	int jid = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	const char* ret = glfwGetJoystickName(jid);
 	RETURN(TO_STRING(ret));
 }
 NATIVE_FUNCTION(GetJoystickGUID) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 1) { THROW_ERROR("GetJoystickGUID takes 1 arguments."); }
 	if(!args[0]->IsNumber()) { THROW_TYPE_ERROR("jid is of type number!"); }
-	int arg0 = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
-	const char* ret = glfwGetJoystickGUID(arg0);
+	int jid = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	const char* ret = glfwGetJoystickGUID(jid);
 	RETURN(TO_STRING(ret));
 }
 NATIVE_FUNCTION(SetJoystickUserPointer) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 2) { THROW_ERROR("SetJoystickUserPointer takes 2 arguments."); }
 	if(!args[0]->IsNumber()) { THROW_TYPE_ERROR("jid is of type number!"); }
-	int arg0 = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	int jid = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
 	if(!args[1]->IsNumber() && !args[1]->IsNullOrUndefined()) { THROW_TYPE_ERROR("pointer is of type pointer!"); }
-	void* arg1;
-	if(args[1]->IsNullOrUndefined()) { arg1 = NULL; }
-	else { arg1 = reinterpret_cast<void*>(args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	glfwSetJoystickUserPointer(arg0, arg1);
+	void* pointer;
+	if(args[1]->IsNullOrUndefined()) { pointer = NULL; }
+	else { pointer = reinterpret_cast<void*>(args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	glfwSetJoystickUserPointer(jid, pointer);
 }
 NATIVE_FUNCTION(GetJoystickUserPointer) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 1) { THROW_ERROR("GetJoystickUserPointer takes 1 arguments."); }
 	if(!args[0]->IsNumber()) { THROW_TYPE_ERROR("jid is of type number!"); }
-	int arg0 = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
-	void* ret = glfwGetJoystickUserPointer(arg0);
+	int jid = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	void* ret = glfwGetJoystickUserPointer(jid);
 	RETURN(TO_NUMBER((uint64_t)ret));
 }
 NATIVE_FUNCTION(JoystickIsGamepad) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 1) { THROW_ERROR("JoystickIsGamepad takes 1 arguments."); }
 	if(!args[0]->IsNumber()) { THROW_TYPE_ERROR("jid is of type number!"); }
-	int arg0 = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
-	int ret = glfwJoystickIsGamepad(arg0);
+	int jid = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	int ret = glfwJoystickIsGamepad(jid);
 	RETURN(TO_NUMBER(ret));
 }
 NATIVE_FUNCTION(SetJoystickCallback) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 1) { THROW_ERROR("SetJoystickCallback takes 1 arguments."); }
-	//!UNKNOWN TYPE for arg0 (type: 'GLFWjoystickfun')!//
-	glfwSetJoystickCallback(arg0);
+	//!UNKNOWN TYPE for callback (type: 'GLFWjoystickfun')!//
+	glfwSetJoystickCallback(callback);
 }
 NATIVE_FUNCTION(UpdateGamepadMappings) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 1) { THROW_ERROR("UpdateGamepadMappings takes 1 arguments."); }
 	if(!args[0]->IsString()) { THROW_TYPE_ERROR("string is of type string!"); }
-	const char* arg0 = (const char*)(*v8::String::Utf8Value(args[0]));
-	int ret = glfwUpdateGamepadMappings(arg0);
+	const char* string = (const char*)(*v8::String::Utf8Value(args[0]));
+	int ret = glfwUpdateGamepadMappings(string);
 	RETURN(TO_NUMBER(ret));
 }
 NATIVE_FUNCTION(GetGamepadName) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 1) { THROW_ERROR("GetGamepadName takes 1 arguments."); }
 	if(!args[0]->IsNumber()) { THROW_TYPE_ERROR("jid is of type number!"); }
-	int arg0 = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
-	const char* ret = glfwGetGamepadName(arg0);
+	int jid = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	const char* ret = glfwGetGamepadName(jid);
 	RETURN(TO_STRING(ret));
 }
 NATIVE_FUNCTION(GetGamepadState) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 2) { THROW_ERROR("GetGamepadState takes 2 arguments."); }
 	if(!args[0]->IsNumber()) { THROW_TYPE_ERROR("jid is of type number!"); }
-	int arg0 = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
-	//!UNKNOWN TYPE for arg1 (type: 'GLFWgamepadstate*')!//
-	int ret = glfwGetGamepadState(arg0, arg1);
+	int jid = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	//!UNKNOWN TYPE for state (type: 'GLFWgamepadstate*')!//
+	int ret = glfwGetGamepadState(jid, state);
 	RETURN(TO_NUMBER(ret));
 }
 NATIVE_FUNCTION(SetClipboardString) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 2) { THROW_ERROR("SetClipboardString takes 2 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	GLFWwindow* window;
+	if(args[0]->IsNullOrUndefined()) { window = NULL; }
+	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
 	if(!args[1]->IsString()) { THROW_TYPE_ERROR("string is of type string!"); }
-	const char* arg1 = (const char*)(*v8::String::Utf8Value(args[1]));
-	glfwSetClipboardString(arg0, arg1);
+	const char* string = (const char*)(*v8::String::Utf8Value(args[1]));
+	glfwSetClipboardString(window, string);
 }
 NATIVE_FUNCTION(GetClipboardString) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 1) { THROW_ERROR("GetClipboardString takes 1 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	const char* ret = glfwGetClipboardString(arg0);
+	GLFWwindow* window;
+	if(args[0]->IsNullOrUndefined()) { window = NULL; }
+	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	const char* ret = glfwGetClipboardString(window);
 	RETURN(TO_STRING(ret));
 }
 NATIVE_FUNCTION(GetTime) {
@@ -1120,8 +1120,8 @@ NATIVE_FUNCTION(SetTime) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 1) { THROW_ERROR("SetTime takes 1 arguments."); }
 	if(!args[0]->IsNumber()) { THROW_TYPE_ERROR("time is of type number!"); }
-	double arg0 = args[0]->NumberValue(isolate->GetCurrentContext()).FromMaybe(0);
-	glfwSetTime(arg0);
+	double time = args[0]->NumberValue(isolate->GetCurrentContext()).FromMaybe(0);
+	glfwSetTime(time);
 }
 NATIVE_FUNCTION(GetTimerValue) {
 	v8::Isolate* isolate = args.GetIsolate();
@@ -1137,10 +1137,10 @@ NATIVE_FUNCTION(MakeContextCurrent) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 1) { THROW_ERROR("MakeContextCurrent takes 1 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	glfwMakeContextCurrent(arg0);
+	GLFWwindow* window;
+	if(args[0]->IsNullOrUndefined()) { window = NULL; }
+	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	glfwMakeContextCurrent(window);
 }
 NATIVE_FUNCTION(GetCurrentContext) {
 	v8::Isolate* isolate = args.GetIsolate();
@@ -1151,32 +1151,32 @@ NATIVE_FUNCTION(SwapBuffers) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 1) { THROW_ERROR("SwapBuffers takes 1 arguments."); }
 	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	glfwSwapBuffers(arg0);
+	GLFWwindow* window;
+	if(args[0]->IsNullOrUndefined()) { window = NULL; }
+	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	glfwSwapBuffers(window);
 }
 NATIVE_FUNCTION(SwapInterval) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 1) { THROW_ERROR("SwapInterval takes 1 arguments."); }
 	if(!args[0]->IsNumber()) { THROW_TYPE_ERROR("interval is of type number!"); }
-	int arg0 = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
-	glfwSwapInterval(arg0);
+	int interval = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
+	glfwSwapInterval(interval);
 }
 NATIVE_FUNCTION(ExtensionSupported) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 1) { THROW_ERROR("ExtensionSupported takes 1 arguments."); }
 	if(!args[0]->IsString()) { THROW_TYPE_ERROR("extension is of type string!"); }
-	const char* arg0 = (const char*)(*v8::String::Utf8Value(args[0]));
-	int ret = glfwExtensionSupported(arg0);
+	const char* extension = (const char*)(*v8::String::Utf8Value(args[0]));
+	int ret = glfwExtensionSupported(extension);
 	RETURN(TO_NUMBER(ret));
 }
 NATIVE_FUNCTION(GetProcAddress) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 1) { THROW_ERROR("GetProcAddress takes 1 arguments."); }
 	if(!args[0]->IsString()) { THROW_TYPE_ERROR("procname is of type string!"); }
-	const char* arg0 = (const char*)(*v8::String::Utf8Value(args[0]));
-	GLFWglproc ret = glfwGetProcAddress(arg0);
+	const char* procname = (const char*)(*v8::String::Utf8Value(args[0]));
+	GLFWglproc ret = glfwGetProcAddress(procname);
 	RETURN(TO_NUMBER((uint64_t)ret));
 }
 NATIVE_FUNCTION(VulkanSupported) {
@@ -1187,39 +1187,39 @@ NATIVE_FUNCTION(VulkanSupported) {
 NATIVE_FUNCTION(GetRequiredInstanceExtensions) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 1) { THROW_ERROR("GetRequiredInstanceExtensions takes 1 arguments."); }
-	//!UNKNOWN TYPE for arg0 (type: 'uint32_t*')!//
-	const char** ret = glfwGetRequiredInstanceExtensions(arg0);
+	//!UNKNOWN TYPE for count (type: 'uint32_t*')!//
+	const char** ret = glfwGetRequiredInstanceExtensions(count);
 	//!UNKNOWN RETURN TYPE for glfwGetRequiredInstanceExtensions//
 }
 NATIVE_FUNCTION(GetInstanceProcAddress) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 2) { THROW_ERROR("GetInstanceProcAddress takes 2 arguments."); }
-	//!UNKNOWN TYPE for arg0 (type: 'VkInstance')!//
+	//!UNKNOWN TYPE for instance (type: 'VkInstance')!//
 	if(!args[1]->IsString()) { THROW_TYPE_ERROR("procname is of type string!"); }
-	const char* arg1 = (const char*)(*v8::String::Utf8Value(args[1]));
-	GLFWvkproc ret = glfwGetInstanceProcAddress(arg0, arg1);
+	const char* procname = (const char*)(*v8::String::Utf8Value(args[1]));
+	GLFWvkproc ret = glfwGetInstanceProcAddress(instance, procname);
 	RETURN(TO_NUMBER((uint64_t)ret));
 }
 NATIVE_FUNCTION(GetPhysicalDevicePresentationSupport) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 3) { THROW_ERROR("GetPhysicalDevicePresentationSupport takes 3 arguments."); }
-	//!UNKNOWN TYPE for arg0 (type: 'VkInstance')!//
-	//!UNKNOWN TYPE for arg1 (type: 'VkPhysicalDevice')!//
-	//!UNKNOWN TYPE for arg2 (type: 'uint32_t')!//
-	int ret = glfwGetPhysicalDevicePresentationSupport(arg0, arg1, arg2);
+	//!UNKNOWN TYPE for instance (type: 'VkInstance')!//
+	//!UNKNOWN TYPE for device (type: 'VkPhysicalDevice')!//
+	//!UNKNOWN TYPE for queuefamily (type: 'uint32_t')!//
+	int ret = glfwGetPhysicalDevicePresentationSupport(instance, device, queuefamily);
 	RETURN(TO_NUMBER(ret));
 }
 NATIVE_FUNCTION(CreateWindowSurface) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 4) { THROW_ERROR("CreateWindowSurface takes 4 arguments."); }
-	//!UNKNOWN TYPE for arg0 (type: 'VkInstance')!//
+	//!UNKNOWN TYPE for instance (type: 'VkInstance')!//
 	if(!args[1]->IsNumber() && !args[1]->IsNullOrUndefined()) { THROW_TYPE_ERROR("window is of type pointer!"); }
-	GLFWwindow* arg1;
-	if(args[1]->IsNullOrUndefined()) { arg1 = NULL; }
-	else { arg1 = reinterpret_cast<GLFWwindow*>(args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	//!UNKNOWN TYPE for arg2 (type: 'const VkAllocationCallbacks*')!//
-	//!UNKNOWN TYPE for arg3 (type: 'VkSurfaceKHR*')!//
-	VkResult ret = glfwCreateWindowSurface(arg0, arg1, arg2, arg3);
+	GLFWwindow* window;
+	if(args[1]->IsNullOrUndefined()) { window = NULL; }
+	else { window = reinterpret_cast<GLFWwindow*>(args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	//!UNKNOWN TYPE for allocator (type: 'const VkAllocationCallbacks*')!//
+	//!UNKNOWN TYPE for surface (type: 'VkSurfaceKHR*')!//
+	VkResult ret = glfwCreateWindowSurface(instance, window, allocator, surface);
 	//!UNKNOWN RETURN TYPE for glfwCreateWindowSurface//
 }
 

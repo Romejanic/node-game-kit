@@ -126,7 +126,7 @@ module.exports = async function(path, prefix) {
                         }
                         let argArr = [];
                         for(let i = 0; i < argCount; i++) {
-                            argArr.push("arg" + i);
+                            argArr.push(method.arguments[i].name);
                         }
                         argArr = argArr.join(", ");
                         if(hasReturn) {
@@ -193,20 +193,20 @@ function convertFromV8Argument(arg, i) {
     let out = addTypeCheck(arg, i);
     switch(arg.type) {
         case "int":
-            out += `\tint arg${i} = args[${i}]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);\n`;
+            out += `\tint ${arg.name} = args[${i}]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);\n`;
             break;
         case "double":
         case "float":
-            out += `\t${arg.type} arg${i} = args[${i}]->NumberValue(isolate->GetCurrentContext()).FromMaybe(0);\n`;
+            out += `\t${arg.type} ${arg.name} = args[${i}]->NumberValue(isolate->GetCurrentContext()).FromMaybe(0);\n`;
             break;
         case "const char*":
-            out += `\tconst char* arg${i} = (const char*)(*v8::String::Utf8Value(args[${i}]));\n`;
+            out += `\tconst char* ${arg.name} = (const char*)(*v8::String::Utf8Value(args[${i}]));\n`;
             break;
         default:
             if(TYPE_MAP[arg.type] === "pointer") {
-                out += `\t${arg.type} arg${i};\n`;
-                out += `\tif(args[${i}]->IsNullOrUndefined()) { arg${i} = NULL; }\n`;
-                out += `\telse { arg${i} = reinterpret_cast<${arg.type}>(args[${i}]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }\n`;
+                out += `\t${arg.type} ${arg.name};\n`;
+                out += `\tif(args[${i}]->IsNullOrUndefined()) { ${arg.name} = NULL; }\n`;
+                out += `\telse { ${arg.name} = reinterpret_cast<${arg.type}>(args[${i}]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }\n`;
             }
             break;
     }
@@ -222,7 +222,7 @@ function addTypeCheck(arg, i) {
         case "string":
             return `\tif(!args[${i}]->IsString()) { THROW_TYPE_ERROR("${arg.name} is of type ${TYPE_MAP[arg.type]}!"); }\n`;
         default:
-            return `\t//!UNKNOWN TYPE for arg${i} (type: '${arg.type}')!//\n`;
+            return `\t//!UNKNOWN TYPE for ${arg.name} (type: '${arg.type}')!//\n`;
     }
 }
 
