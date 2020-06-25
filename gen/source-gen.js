@@ -150,7 +150,7 @@ module.exports = async function(path, prefix) {
                 let structs = "";
                 for(let structName in objectDefs) {
                     // v8 -> struct
-                    structs += `${structName}* to${structName}(v8::Local<v8::Object> arg) {\n`;
+                    structs += `${structName}* _to${structName}(v8::Local<v8::Object> arg) {\n`;
                     structs += `\tv8::Isolate* isolate = arg->GetIsolate();\n`;
                     structs += `\t${structName}* ret = (${structName}*)malloc(sizeof(${structName}));\n`;
                     for(let varName in objectDefs[structName]) {
@@ -159,7 +159,7 @@ module.exports = async function(path, prefix) {
                     structs += `\treturn ret;\n`;
                     structs += `}\n`;
                     // struct -> v8
-                    structs += `v8::Local<v8::Object> from${structName}(${structName}* arg) {\n`;
+                    structs += `v8::Local<v8::Object> _from${structName}(${structName}* arg) {\n`;
                     structs += `\tv8::Isolate* isolate = v8::Isolate::GetCurrent();\n`;
                     structs += `\tv8::Local<v8::Object> ret = v8::Object::New(isolate);\n`;
                     for(let varName in objectDefs[structName]) {

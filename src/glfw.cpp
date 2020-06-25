@@ -14,7 +14,7 @@
 #include <native-helper.h>
 #include <GLFW/glfw3.h>
 
-GLFWvidmode* toGLFWvidmode(v8::Local<v8::Object> arg) {
+GLFWvidmode* _toGLFWvidmode(v8::Local<v8::Object> arg) {
 	v8::Isolate* isolate = arg->GetIsolate();
 	GLFWvidmode* ret = (GLFWvidmode*)malloc(sizeof(GLFWvidmode));
 	ret->width = arg->Get(TO_STRING("width"))->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
@@ -25,7 +25,7 @@ GLFWvidmode* toGLFWvidmode(v8::Local<v8::Object> arg) {
 	ret->refreshRate = arg->Get(TO_STRING("refreshRate"))->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
 	return ret;
 }
-v8::Local<v8::Object> fromGLFWvidmode(GLFWvidmode* arg) {
+v8::Local<v8::Object> _fromGLFWvidmode(GLFWvidmode* arg) {
 	v8::Isolate* isolate = v8::Isolate::GetCurrent();
 	v8::Local<v8::Object> ret = v8::Object::New(isolate);
 	ret->Set(TO_STRING("width"), TO_NUMBER(arg->width));
@@ -36,7 +36,7 @@ v8::Local<v8::Object> fromGLFWvidmode(GLFWvidmode* arg) {
 	ret->Set(TO_STRING("refreshRate"), TO_NUMBER(arg->refreshRate));
 	return ret;
 }
-GLFWgammaramp* toGLFWgammaramp(v8::Local<v8::Object> arg) {
+GLFWgammaramp* _toGLFWgammaramp(v8::Local<v8::Object> arg) {
 	v8::Isolate* isolate = arg->GetIsolate();
 	GLFWgammaramp* ret = (GLFWgammaramp*)malloc(sizeof(GLFWgammaramp));
 	ret->red = arg->Get(TO_STRING("red"))->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
@@ -45,7 +45,7 @@ GLFWgammaramp* toGLFWgammaramp(v8::Local<v8::Object> arg) {
 	ret->size = arg->Get(TO_STRING("size"))->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
 	return ret;
 }
-v8::Local<v8::Object> fromGLFWgammaramp(GLFWgammaramp* arg) {
+v8::Local<v8::Object> _fromGLFWgammaramp(GLFWgammaramp* arg) {
 	v8::Isolate* isolate = v8::Isolate::GetCurrent();
 	v8::Local<v8::Object> ret = v8::Object::New(isolate);
 	ret->Set(TO_STRING("red"), TO_NUMBER(arg->red));
@@ -54,7 +54,7 @@ v8::Local<v8::Object> fromGLFWgammaramp(GLFWgammaramp* arg) {
 	ret->Set(TO_STRING("size"), TO_NUMBER(arg->size));
 	return ret;
 }
-GLFWimage* toGLFWimage(v8::Local<v8::Object> arg) {
+GLFWimage* _toGLFWimage(v8::Local<v8::Object> arg) {
 	v8::Isolate* isolate = arg->GetIsolate();
 	GLFWimage* ret = (GLFWimage*)malloc(sizeof(GLFWimage));
 	ret->width = arg->Get(TO_STRING("width"))->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
@@ -62,7 +62,7 @@ GLFWimage* toGLFWimage(v8::Local<v8::Object> arg) {
 	ret->pixels = arg->Get(TO_STRING("pixels"))->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
 	return ret;
 }
-v8::Local<v8::Object> fromGLFWimage(GLFWimage* arg) {
+v8::Local<v8::Object> _fromGLFWimage(GLFWimage* arg) {
 	v8::Isolate* isolate = v8::Isolate::GetCurrent();
 	v8::Local<v8::Object> ret = v8::Object::New(isolate);
 	ret->Set(TO_STRING("width"), TO_NUMBER(arg->width));
@@ -70,14 +70,14 @@ v8::Local<v8::Object> fromGLFWimage(GLFWimage* arg) {
 	ret->Set(TO_STRING("pixels"), TO_NUMBER(arg->pixels));
 	return ret;
 }
-GLFWgamepadstate* toGLFWgamepadstate(v8::Local<v8::Object> arg) {
+GLFWgamepadstate* _toGLFWgamepadstate(v8::Local<v8::Object> arg) {
 	v8::Isolate* isolate = arg->GetIsolate();
 	GLFWgamepadstate* ret = (GLFWgamepadstate*)malloc(sizeof(GLFWgamepadstate));
 	ret->buttons[15] = arg->Get(TO_STRING("buttons[15]"))->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
 	ret->axes[6] = arg->Get(TO_STRING("axes[6]"))->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
 	return ret;
 }
-v8::Local<v8::Object> fromGLFWgamepadstate(GLFWgamepadstate* arg) {
+v8::Local<v8::Object> _fromGLFWgamepadstate(GLFWgamepadstate* arg) {
 	v8::Isolate* isolate = v8::Isolate::GetCurrent();
 	v8::Local<v8::Object> ret = v8::Object::New(isolate);
 	v8::Local<v8::Array> buttonsArr = v8::Array::New(isolate, 15);
