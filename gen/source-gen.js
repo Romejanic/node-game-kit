@@ -10,12 +10,7 @@ const TYPE_MAP = {
     "const char*": "string",
     "GLFWwindow*": "pointer",
     "GLFWmonitor*": "pointer",
-    "const GLFWimage*": "pointer",
-    "GLFWimage*": "pointer",
     "GLFWcursor*": "pointer",
-    "GLFWgamepadstate*": "pointer",
-    "const GLFWgammaramp*": "pointer",
-    "GLFWgammaramp*": "pointer",
     "GLFWglproc": "pointer",
     "GLFWvkproc": "pointer",
     "void*": "pointer"
@@ -26,15 +21,18 @@ module.exports = async function(path, prefix) {
     //
     let consts = [];
     let methods = {};
-    // let types = [];
+    let objectDefs = {};
     //
-    for(let line of lines) {
+    for(let i in lines) {
+        let line = lines[i];
         line = line.trim();
         if(line.startsWith(`#define ${prefix}_`)) {
+            // CONSTANT
             let trimmed = line.substring("#define ".length);
             trimmed = trimmed.substring(0, trimmed.indexOf(" "));
             if(trimmed.length > 0) consts.push(trimmed);
         } else if(line.startsWith(`${prefix}API `)) {
+            // API METHOD
             let trimmed = line.substring(`${prefix}API `.length);
             let header = trimmed.substring(0, trimmed.indexOf("("));
             let returnType = header.substring(0, header.lastIndexOf(" "));
@@ -53,10 +51,35 @@ module.exports = async function(path, prefix) {
                 });
                 // if(types.indexOf(type) < 0) types.push(type);
             }
+        } else if(line.startsWith("typedef struct") && !line.endsWith(";")) {
+            // OBJECT STRUCT
+            let structName = line.substring("typedef struct ".length).trim();
+            if(objectDefs[structName]) {
+                continue; // skip if already defined
+            }
+            objectDefs[structName] = {};
+            while(line.indexOf(structName+";") < 0) {
+                // next line
+                i++; line = lines[i].trim();
+                // skip curly braces and comments
+                if(line.indexOf("{") < 0 && line.indexOf("}") < 0 && line.indexOf("/*") < 0 && line.indexOf("*/") < 0 && !line.startsWith("*")) {
+                    let idx = line.lastIndexOf(" ");
+                    let varName = line.substring(idx+1);
+                    let varType = line.substring(0,idx);
+                    objectDefs[structName][varName.substring(0,varName.length-1)] = varType;
+                }
+            }
+            // check type map
+            if(TYPE_MAP[structName] !== "object")  {
+                TYPE_MAP[structName] = "object";
+            }
+            if(TYPE_MAP["const " + structName] !== "object") {
+                TYPE_MAP["const "+ structName] = "object";
+            }
         }
     }
     // debug output
-    await fs.writeFile(`debug_${prefix}_members.json`, JSON.stringify({ consts, methods }, null, 4));
+    await fs.writeFile(`debug_${prefix}_members.json`, JSON.stringify({ consts, methods, objectDefs }, null, 4));
     // console.log("All parameter types:", types);
     // generate source file
     let src = SRC_TEMPLATE.split("\n");

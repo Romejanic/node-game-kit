@@ -194,7 +194,7 @@ NATIVE_FUNCTION(GetGammaRamp) {
 	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
 	else { arg0 = reinterpret_cast<GLFWmonitor*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
 	const GLFWgammaramp* ret = glfwGetGammaRamp(arg0);
-	RETURN(TO_NUMBER((uint64_t)ret));
+	//!UNKNOWN RETURN TYPE for glfwGetGammaRamp//
 }
 NATIVE_FUNCTION(SetGammaRamp) {
 	v8::Isolate* isolate = args.GetIsolate();
@@ -203,10 +203,7 @@ NATIVE_FUNCTION(SetGammaRamp) {
 	GLFWmonitor* arg0;
 	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
 	else { arg0 = reinterpret_cast<GLFWmonitor*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
-	if(!args[1]->IsNumber() && !args[1]->IsNullOrUndefined()) { THROW_TYPE_ERROR("ramp is of type pointer!"); }
-	const GLFWgammaramp* arg1;
-	if(args[1]->IsNullOrUndefined()) { arg1 = NULL; }
-	else { arg1 = reinterpret_cast<const GLFWgammaramp*>(args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	//!UNKNOWN TYPE for arg1 (type: 'const GLFWgammaramp*')!//
 	glfwSetGammaRamp(arg0, arg1);
 }
 NATIVE_FUNCTION(DefaultWindowHints) {
@@ -300,10 +297,7 @@ NATIVE_FUNCTION(SetWindowIcon) {
 	else { arg0 = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
 	if(!args[1]->IsNumber()) { THROW_TYPE_ERROR("count is of type number!"); }
 	int arg1 = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
-	if(!args[2]->IsNumber() && !args[2]->IsNullOrUndefined()) { THROW_TYPE_ERROR("images is of type pointer!"); }
-	const GLFWimage* arg2;
-	if(args[2]->IsNullOrUndefined()) { arg2 = NULL; }
-	else { arg2 = reinterpret_cast<const GLFWimage*>(args[2]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	//!UNKNOWN TYPE for arg2 (type: 'const GLFWimage*')!//
 	glfwSetWindowIcon(arg0, arg1, arg2);
 }
 NATIVE_FUNCTION(GetWindowPos) {
@@ -789,10 +783,7 @@ NATIVE_FUNCTION(SetCursorPos) {
 NATIVE_FUNCTION(CreateCursor) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 3) { THROW_ERROR("CreateCursor takes 3 arguments."); }
-	if(!args[0]->IsNumber() && !args[0]->IsNullOrUndefined()) { THROW_TYPE_ERROR("image is of type pointer!"); }
-	const GLFWimage* arg0;
-	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
-	else { arg0 = reinterpret_cast<const GLFWimage*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	//!UNKNOWN TYPE for arg0 (type: 'const GLFWimage*')!//
 	if(!args[1]->IsNumber()) { THROW_TYPE_ERROR("xhot is of type number!"); }
 	int arg1 = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
 	if(!args[2]->IsNumber()) { THROW_TYPE_ERROR("yhot is of type number!"); }
@@ -1015,10 +1006,7 @@ NATIVE_FUNCTION(GetGamepadState) {
 	if(args.Length() < 2) { THROW_ERROR("GetGamepadState takes 2 arguments."); }
 	if(!args[0]->IsNumber()) { THROW_TYPE_ERROR("jid is of type number!"); }
 	int arg0 = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
-	if(!args[1]->IsNumber() && !args[1]->IsNullOrUndefined()) { THROW_TYPE_ERROR("state is of type pointer!"); }
-	GLFWgamepadstate* arg1;
-	if(args[1]->IsNullOrUndefined()) { arg1 = NULL; }
-	else { arg1 = reinterpret_cast<GLFWgamepadstate*>(args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
+	//!UNKNOWN TYPE for arg1 (type: 'GLFWgamepadstate*')!//
 	int ret = glfwGetGamepadState(arg0, arg1);
 	RETURN(TO_NUMBER(ret));
 }
