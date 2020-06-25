@@ -326,7 +326,7 @@ NATIVE_FUNCTION(WindowHintString) {
 	if(!args[0]->IsNumber()) { THROW_TYPE_ERROR("hint is of type number!"); }
 	int hint = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
 	if(!args[1]->IsString()) { THROW_TYPE_ERROR("value is of type string!"); }
-	const char* value = (const char*)(*v8::String::Utf8Value(args[1]));
+	const char* value = (const char*)(*v8::String::Utf8Value(isolate, args[1]));
 	glfwWindowHintString(hint, value);
 }
 NATIVE_FUNCTION(CreateWindow) {
@@ -337,7 +337,7 @@ NATIVE_FUNCTION(CreateWindow) {
 	if(!args[1]->IsNumber()) { THROW_TYPE_ERROR("height is of type number!"); }
 	int height = args[1]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
 	if(!args[2]->IsString()) { THROW_TYPE_ERROR("title is of type string!"); }
-	const char* title = (const char*)(*v8::String::Utf8Value(args[2]));
+	const char* title = (const char*)(*v8::String::Utf8Value(isolate, args[2]));
 	if(!args[3]->IsNumber() && !args[3]->IsNullOrUndefined()) { THROW_TYPE_ERROR("monitor is of type pointer!"); }
 	GLFWmonitor* monitor;
 	if(args[3]->IsNullOrUndefined()) { monitor = NULL; }
@@ -387,7 +387,7 @@ NATIVE_FUNCTION(SetWindowTitle) {
 	if(args[0]->IsNullOrUndefined()) { window = NULL; }
 	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
 	if(!args[1]->IsString()) { THROW_TYPE_ERROR("title is of type string!"); }
-	const char* title = (const char*)(*v8::String::Utf8Value(args[1]));
+	const char* title = (const char*)(*v8::String::Utf8Value(isolate, args[1]));
 	glfwSetWindowTitle(window, title);
 }
 NATIVE_FUNCTION(SetWindowIcon) {
@@ -926,7 +926,7 @@ NATIVE_FUNCTION(CreateCursor) {
 	if(args.Length() < 3) { THROW_ERROR("CreateCursor takes 3 arguments."); }
 	if(!args[0]->IsObject()) { THROW_TYPE_ERROR("image is of type object!"); }
 	GLFWimage* image = (GLFWimage*)malloc(sizeof(GLFWimage));
-	if(!_toGLFWimage(image, args[0]->ToObject())) {
+	if(!_toGLFWimage(image, args[0]->ToObject(isolate->GetCurrentContext()).ToLocalChecked()) {
 		free(&image);
 		THROW_ERROR("Invalid image object!");
 	}
@@ -1157,7 +1157,7 @@ NATIVE_FUNCTION(UpdateGamepadMappings) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 1) { THROW_ERROR("UpdateGamepadMappings takes 1 arguments."); }
 	if(!args[0]->IsString()) { THROW_TYPE_ERROR("string is of type string!"); }
-	const char* string = (const char*)(*v8::String::Utf8Value(args[0]));
+	const char* string = (const char*)(*v8::String::Utf8Value(isolate, args[0]));
 	int ret = glfwUpdateGamepadMappings(string);
 	RETURN(TO_NUMBER(ret));
 }
@@ -1189,7 +1189,7 @@ NATIVE_FUNCTION(SetClipboardString) {
 	if(args[0]->IsNullOrUndefined()) { window = NULL; }
 	else { window = reinterpret_cast<GLFWwindow*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
 	if(!args[1]->IsString()) { THROW_TYPE_ERROR("string is of type string!"); }
-	const char* string = (const char*)(*v8::String::Utf8Value(args[1]));
+	const char* string = (const char*)(*v8::String::Utf8Value(isolate, args[1]));
 	glfwSetClipboardString(window, string);
 }
 NATIVE_FUNCTION(GetClipboardString) {
@@ -1258,7 +1258,7 @@ NATIVE_FUNCTION(ExtensionSupported) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 1) { THROW_ERROR("ExtensionSupported takes 1 arguments."); }
 	if(!args[0]->IsString()) { THROW_TYPE_ERROR("extension is of type string!"); }
-	const char* extension = (const char*)(*v8::String::Utf8Value(args[0]));
+	const char* extension = (const char*)(*v8::String::Utf8Value(isolate, args[0]));
 	int ret = glfwExtensionSupported(extension);
 	RETURN(TO_NUMBER(ret));
 }
@@ -1266,7 +1266,7 @@ NATIVE_FUNCTION(GetProcAddress) {
 	v8::Isolate* isolate = args.GetIsolate();
 	if(args.Length() < 1) { THROW_ERROR("GetProcAddress takes 1 arguments."); }
 	if(!args[0]->IsString()) { THROW_TYPE_ERROR("procname is of type string!"); }
-	const char* procname = (const char*)(*v8::String::Utf8Value(args[0]));
+	const char* procname = (const char*)(*v8::String::Utf8Value(isolate, args[0]));
 	GLFWglproc ret = glfwGetProcAddress(procname);
 	RETURN(TO_NUMBER((uint64_t)ret));
 }

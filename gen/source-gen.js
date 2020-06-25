@@ -200,7 +200,7 @@ function convertFromV8Argument(arg, i) {
             out += `\t${arg.type} ${arg.name} = args[${i}]->NumberValue(isolate->GetCurrentContext()).FromMaybe(0);\n`;
             break;
         case "const char*":
-            out += `\tconst char* ${arg.name} = (const char*)(*v8::String::Utf8Value(args[${i}]));\n`;
+            out += `\tconst char* ${arg.name} = (const char*)(*v8::String::Utf8Value(isolate, args[${i}]));\n`;
             break;
         default:
             if(TYPE_MAP[arg.type] === "pointer") {
