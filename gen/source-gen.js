@@ -80,7 +80,6 @@ module.exports = async function(path, prefix) {
     }
     // debug output
     await fs.writeFile(`debug_${prefix}_members.json`, JSON.stringify({ consts, methods, objectDefs }, null, 4));
-    // console.log("All parameter types:", types);
     // generate source file
     let src = SRC_TEMPLATE.split("\n");
     for(let i in src) {
@@ -159,7 +158,7 @@ module.exports = async function(path, prefix) {
                     structs += `\treturn ret;\n`;
                     structs += `}\n`;
                     // struct -> v8
-                    structs += `v8::Local<v8::Object> _from${structName}(${structName}* arg) {\n`;
+                    structs += `v8::Local<v8::Object> _from${structName}(const ${structName}* arg) {\n`;
                     structs += `\tv8::Isolate* isolate = v8::Isolate::GetCurrent();\n`;
                     structs += `\tv8::Local<v8::Object> ret = v8::Object::New(isolate);\n`;
                     for(let varName in objectDefs[structName]) {
@@ -247,6 +246,9 @@ function convertToV8Return(name, method, argArr) {
         default:
             if(TYPE_MAP[method.returnType] === "pointer") {
                 out += `\tRETURN(TO_NUMBER((uint64_t)ret));\n`;
+            } else if(TYPE_MAP[method.returnType.substring(0,method.returnType.length-1)] === "object") {
+                let structName = method.returnType.startsWith("const ") ? method.returnType.substring("const ".length) : method.returnType;
+                out += `\tRETURN(_from${structName.substring(0,structName.length-1)}(ret));\n`;
             } else {
                 out += `\t//!UNKNOWN RETURN TYPE for ${name}//\n`;
             }

@@ -25,7 +25,7 @@ GLFWvidmode* _toGLFWvidmode(v8::Local<v8::Object> arg) {
 	ret->refreshRate = arg->Get(TO_STRING("refreshRate"))->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
 	return ret;
 }
-v8::Local<v8::Object> _fromGLFWvidmode(GLFWvidmode* arg) {
+v8::Local<v8::Object> _fromGLFWvidmode(const GLFWvidmode* arg) {
 	v8::Isolate* isolate = v8::Isolate::GetCurrent();
 	v8::Local<v8::Object> ret = v8::Object::New(isolate);
 	ret->Set(TO_STRING("width"), TO_NUMBER(arg->width));
@@ -45,7 +45,7 @@ GLFWgammaramp* _toGLFWgammaramp(v8::Local<v8::Object> arg) {
 	ret->size = arg->Get(TO_STRING("size"))->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
 	return ret;
 }
-v8::Local<v8::Object> _fromGLFWgammaramp(GLFWgammaramp* arg) {
+v8::Local<v8::Object> _fromGLFWgammaramp(const GLFWgammaramp* arg) {
 	v8::Isolate* isolate = v8::Isolate::GetCurrent();
 	v8::Local<v8::Object> ret = v8::Object::New(isolate);
 	ret->Set(TO_STRING("red"), TO_NUMBER(arg->red));
@@ -62,7 +62,7 @@ GLFWimage* _toGLFWimage(v8::Local<v8::Object> arg) {
 	ret->pixels = arg->Get(TO_STRING("pixels"))->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
 	return ret;
 }
-v8::Local<v8::Object> _fromGLFWimage(GLFWimage* arg) {
+v8::Local<v8::Object> _fromGLFWimage(const GLFWimage* arg) {
 	v8::Isolate* isolate = v8::Isolate::GetCurrent();
 	v8::Local<v8::Object> ret = v8::Object::New(isolate);
 	ret->Set(TO_STRING("width"), TO_NUMBER(arg->width));
@@ -77,7 +77,7 @@ GLFWgamepadstate* _toGLFWgamepadstate(v8::Local<v8::Object> arg) {
 	ret->axes[6] = arg->Get(TO_STRING("axes[6]"))->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
 	return ret;
 }
-v8::Local<v8::Object> _fromGLFWgamepadstate(GLFWgamepadstate* arg) {
+v8::Local<v8::Object> _fromGLFWgamepadstate(const GLFWgamepadstate* arg) {
 	v8::Isolate* isolate = v8::Isolate::GetCurrent();
 	v8::Local<v8::Object> ret = v8::Object::New(isolate);
 	v8::Local<v8::Array> buttonsArr = v8::Array::New(isolate, 15);
@@ -243,7 +243,7 @@ NATIVE_FUNCTION(GetVideoModes) {
 	else { arg0 = reinterpret_cast<GLFWmonitor*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
 	//!UNKNOWN TYPE for arg1 (type: 'int*')!//
 	const GLFWvidmode* ret = glfwGetVideoModes(arg0, arg1);
-	//!UNKNOWN RETURN TYPE for glfwGetVideoModes//
+	RETURN(_fromGLFWvidmode(ret));
 }
 NATIVE_FUNCTION(GetVideoMode) {
 	v8::Isolate* isolate = args.GetIsolate();
@@ -253,7 +253,7 @@ NATIVE_FUNCTION(GetVideoMode) {
 	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
 	else { arg0 = reinterpret_cast<GLFWmonitor*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
 	const GLFWvidmode* ret = glfwGetVideoMode(arg0);
-	//!UNKNOWN RETURN TYPE for glfwGetVideoMode//
+	RETURN(_fromGLFWvidmode(ret));
 }
 NATIVE_FUNCTION(SetGamma) {
 	v8::Isolate* isolate = args.GetIsolate();
@@ -274,7 +274,7 @@ NATIVE_FUNCTION(GetGammaRamp) {
 	if(args[0]->IsNullOrUndefined()) { arg0 = NULL; }
 	else { arg0 = reinterpret_cast<GLFWmonitor*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
 	const GLFWgammaramp* ret = glfwGetGammaRamp(arg0);
-	//!UNKNOWN RETURN TYPE for glfwGetGammaRamp//
+	RETURN(_fromGLFWgammaramp(ret));
 }
 NATIVE_FUNCTION(SetGammaRamp) {
 	v8::Isolate* isolate = args.GetIsolate();
