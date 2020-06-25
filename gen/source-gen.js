@@ -4,11 +4,14 @@ const SRC_TEMPLATE = require("fs").readFileSync("src/_template.cpp").toString();
 
 const TYPE_MAP = {
     "void": "undefined",
+    "void*": "undefined",
     "int": "number",
-    "float": "number",
-    "double": "number",
+    "int*": "array",
     "const char*": "string",
-    "double*": "pointer"
+    "float": "number",
+    "float*": "array",
+    "double": "number",
+    "double*": "array",
 };
 
 module.exports = async function(path, prefix) {
@@ -16,6 +19,7 @@ module.exports = async function(path, prefix) {
     //
     let consts = [];
     let methods = {};
+    let types = [];
     //
     for(let line of lines) {
         line = line.trim();
@@ -40,11 +44,13 @@ module.exports = async function(path, prefix) {
                 methods[functionName].arguments.push({
                     type, name
                 });
+                if(types.indexOf(type) < 0) types.push(type);
             }
         }
     }
     // debug output
     await fs.writeFile(`debug_${prefix}_members.json`, JSON.stringify({ consts, methods }, null, 4));
+    console.log("All parameter types:", types);
     // generate source file
     let src = SRC_TEMPLATE.split("\n");
     for(let i in src) {
@@ -89,12 +95,27 @@ module.exports = async function(path, prefix) {
                         for(let i = 0; i < argCount; i++) {
                             switch(TYPE_MAP[method.arguments[i].type]) {
                                 case "number":
-                                    funcs += `\tif(!args[${i}]->IsNumber()) { THROW_TYPE_ERROR("${method.arguments[i].name} is of type ${TYPE_MAP[method.arguments[i].type]}!"); }\n\t${method.arguments[i].type} arg${i} = args[${i}]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);\n`;
+                                    funcs += `\tif(!args[${i}]->IsNumber()) { THROW_TYPE_ERROR("${method.arguments[i].name} is of type ${TYPE_MAP[method.arguments[i].type]}!"); }\n`;
+                                    funcs += `\t${method.arguments[i].type} arg${i} = args[${i}]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);\n`;
+                                    break;
+                                case "string":
+                                    funcs += `\tif(!args[${i}]->IsString()) { THROW_TYPE_ERROR("${method.arguments[i].name} is of type ${TYPE_MAP[method.arguments[i].type]}!"); }\n`
+                                    funcs += `\tconst char* arg${i} = (const char*)(*v8::String::Utf8Value(args[${i}]));\n`;
                                     break;
                                 default:
                                     funcs += `\t//!UNKNOWN TYPE for arg${i}!//\n`;
                                     break;
                             }
+                        }
+                        let argArr = [];
+                        for(let i = 0; i < argCount; i++) {
+                            argArr.push("arg" + i);
+                        }
+                        argArr = argArr.join(", ");
+                        if(hasReturn) {
+                            funcs += `\t${method.returnType} ret = ${funcName}(${argArr});\n\tRETURN(TO_NUMBER(ret));\n`;
+                        } else {
+                            funcs += `\t${funcName}(${argArr});\n`;
                         }
                     } else if(hasReturn) {
                         funcs += `\t${method.returnType} ret = ${funcName}();\n\tRETURN(TO_NUMBER(ret));\n`;
