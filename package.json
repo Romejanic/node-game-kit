@@ -15,7 +15,8 @@
         "install": "node-gyp rebuild",
         "build": "node-gyp rebuild",
         "test": "node test.js",
-        "gen-src": "node gen/gen-all.js"
+        "gen-src": "node gen/gen-all.js",
+        "configure": "node-gyp configure"
     },
     "main": "index.js",
     "dependencies": {},

@@ -33,12 +33,12 @@ GLFWgammaramp* _toGLFWgammaramp(v8::Local<v8::Object> arg) {
 	v8::Local<v8::String> redKey = TO_STRING("red");
 	v8::Local<v8::String> greenKey = TO_STRING("green");
 	v8::Local<v8::String> blueKey = TO_STRING("blue");
-	if(!arg->Get(redKey)->IsUint16Array()) { free(&ret); THROW_TYPE_ERROR("GLFWgammaramp.red is of type Uint16Array!"); }
-	if(!arg->Get(greenKey)->IsUint16Array()) { free(&ret); THROW_TYPE_ERROR("GLFWgammaramp.green is of type Uint16Array!"); }
-	if(!arg->Get(blueKey)->IsUint16Array()) { free(&ret); THROW_TYPE_ERROR("GLFWgammaramp.blue is of type Uint16Array!"); }
-	ret->red = static_cast<unsigned short*>(arg->Get(redKey).As<v8::Uint8Array>()->Buffer()->GetContents().Data());
-	ret->green = static_cast<unsigned short*>(arg->Get(greenKey).As<v8::Uint8Array>()->Buffer()->GetContents().Data());
-	ret->blue = static_cast<unsigned short*>(arg->Get(blueKey).As<v8::Uint8Array>()->Buffer()->GetContents().Data());
+	if(!arg->Get(redKey)->IsUint16Array()) { free(&ret); THROW_TYPE_ERROR("GLFWgammaramp.red is of type Uint16Array!") NULL; }
+	if(!arg->Get(greenKey)->IsUint16Array()) { free(&ret); THROW_TYPE_ERROR("GLFWgammaramp.green is of type Uint16Array!") NULL; }
+	if(!arg->Get(blueKey)->IsUint16Array()) { free(&ret); THROW_TYPE_ERROR("GLFWgammaramp.blue is of type Uint16Array!") NULL; }
+	ret->red = reinterpret_cast<unsigned short*>(arg->Get(redKey).As<v8::Uint16Array>()->Buffer()->GetContents().Data());
+	ret->green = reinterpret_cast<unsigned short*>(arg->Get(greenKey).As<v8::Uint16Array>()->Buffer()->GetContents().Data());
+	ret->blue = reinterpret_cast<unsigned short*>(arg->Get(blueKey).As<v8::Uint16Array>()->Buffer()->GetContents().Data());
 	ret->size = arg->Get(TO_STRING("size"))->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
 	return ret;
 }
@@ -304,7 +304,7 @@ NATIVE_FUNCTION(SetGammaRamp) {
 	if(args[0]->IsNullOrUndefined()) { monitor = NULL; }
 	else { monitor = reinterpret_cast<GLFWmonitor*>(args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0)); }
 	if(!args[1]->IsObject()) { THROW_TYPE_ERROR("ramp is of type object!"); }
-	const GLFWgammaramp* ramp = _toGLFWgammaramp(args[1]);
+	const GLFWgammaramp* ramp = _toGLFWgammaramp(args[1].As<v8::Object>());
 	glfwSetGammaRamp(monitor, ramp);
 	free(&ramp); // free allocated GLFWgammaramp in _toGLFWgammaramp()
 }
@@ -404,7 +404,7 @@ NATIVE_FUNCTION(SetWindowIcon) {
 	for(int i = 0; i < count; i++) {
 		if(!arr->Get(i)->IsObject()) { free(&images); THROW_TYPE_ERROR("Each image in images should be an object!"); }
 		v8::Local<v8::Object> imageObj = arr->Get(i).As<v8::Object>();
-		if(!_toGLFWimage(&images[i], arr->Get(i))) {
+		if(!_toGLFWimage(&images[i], imageObj)) {
 			THROW_TYPE_ERROR("Error parsing GLFWimage object. Make sure the 'pixels' field is a Uint8Array and is width*height*4 in length.");
 			images[i].width = 0;
 			images[i].height = 0;
