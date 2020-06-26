@@ -1,4 +1,4 @@
-# node-opengl
+# node-game-kit
 A lightweight binding of GLFW and OpenGL for Node.
 
 **Note:** This package is in *preview*! It is not complete yet,
