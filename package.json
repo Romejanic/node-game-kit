@@ -1,6 +1,6 @@
 {
-    "name": "opengl",
-    "version": "1.0.0",
+    "name": "node-opengl",
+    "version": "0.0.2",
     "description": "A lightweight binding of GLFW and OpenGL for Node.",
     "author": {
         "name": "Jack Davenport",
@@ -19,8 +19,10 @@
         "configure": "node-gyp configure"
     },
     "main": "index.js",
-    "dependencies": {},
-    "devDependencies": {
+    "dependencies": {
         "node-gyp": "^7.0.0"
-    }
+    },
+    "keywords": [
+        "opengl", "glfw", "graphics", "native", "binding", "games", "game-kit"
+    ]
 }
