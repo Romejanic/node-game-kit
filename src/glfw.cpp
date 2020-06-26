@@ -926,7 +926,7 @@ NATIVE_FUNCTION(CreateCursor) {
 	if(args.Length() < 3) { THROW_ERROR("CreateCursor takes 3 arguments."); }
 	if(!args[0]->IsObject()) { THROW_TYPE_ERROR("image is of type object!"); }
 	GLFWimage* image = (GLFWimage*)malloc(sizeof(GLFWimage));
-	if(!_toGLFWimage(image, args[0]->ToObject(isolate->GetCurrentContext()).ToLocalChecked()) {
+	if(!_toGLFWimage(image, args[0]->ToObject(isolate->GetCurrentContext()).ToLocalChecked())) {
 		free(&image);
 		THROW_ERROR("Invalid image object!");
 	}

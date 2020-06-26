@@ -24,6 +24,9 @@
                                     "./lib/win32/glfw3.lib"
                                 ]
                             }
+                        ],
+                        "cflags": [
+                            "/verbosity:minimal"
                         ]
                     }
                 ]
