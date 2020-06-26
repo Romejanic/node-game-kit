@@ -23,6 +23,12 @@
         "node-gyp": "^7.0.0"
     },
     "keywords": [
-        "opengl", "glfw", "graphics", "native", "binding", "games", "game-kit"
+        "opengl",
+        "glfw",
+        "graphics",
+        "native",
+        "binding",
+        "games",
+        "game-kit"
     ]
 }
