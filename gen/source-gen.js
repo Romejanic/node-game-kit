@@ -13,7 +13,14 @@ const TYPE_MAP = {
     "GLFWcursor*": "pointer",
     "GLFWglproc": "pointer",
     "GLFWvkproc": "pointer",
-    "void*": "pointer"
+    "void*": "pointer",
+    "GLenum": "number",
+    "GLuint": "number",
+    "GLint": "number",
+    "GLsizei": "number",
+    "GLfloat": "number",
+    "GLdouble": "number",
+    "GLboolean": "number"
 };
 
 module.exports = async function(path, prefix) {
@@ -193,10 +200,14 @@ function convertFromV8Argument(arg, i) {
     let out = addTypeCheck(arg, i);
     switch(arg.type) {
         case "int":
-            out += `\tint ${arg.name} = args[${i}]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);\n`;
+        case "GLuint":
+        case "GLint":
+            out += `\t${arg.type} ${arg.name} = args[${i}]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);\n`;
             break;
         case "double":
         case "float":
+        case "GLfloat":
+        case "GLdouble":
             out += `\t${arg.type} ${arg.name} = args[${i}]->NumberValue(isolate->GetCurrentContext()).FromMaybe(0);\n`;
             break;
         case "const char*":

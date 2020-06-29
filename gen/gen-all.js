@@ -2,7 +2,8 @@ const genSources = require("./source-gen");
 const fs = require("fs");
 
 let headerFiles = [
-    "include/GLFW/glfw3.h", "GLFW"
+    "include/GLFW/glfw3.h", "GLFW",
+    "include/GL/gl.h", "GL"
 ];
 
 (async function() {
@@ -12,7 +13,7 @@ let headerFiles = [
             continue;
         }
         process.stdout.write("Generating " + headerFiles[i+1] + " (" + headerFiles[i] + ")... ");
-        await genSources(headerFiles[0], headerFiles[1]);
+        await genSources(headerFiles[i], headerFiles[i+1]);
         console.log("Done!");
     }
 })().catch(console.error);
