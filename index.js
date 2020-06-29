@@ -7,5 +7,6 @@ function getModule(name) {
 }
 
 module.exports = {
-    GLFW: getModule("glfw")
+    GLFW: getModule("glfw"),
+    GL: getModule("gl")
 };
