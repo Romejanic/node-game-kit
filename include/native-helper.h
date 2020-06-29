@@ -4,7 +4,7 @@
 #include <node.h>
 
 // Type Conversions
-#define TO_STRING(x) v8::String::NewFromUtf8(isolate, x)
+#define TO_STRING(x) v8::String::NewFromUtf8(isolate, x, v8::NewStringType::kNormal).ToLocalChecked()
 #define TO_NUMBER(x) v8::Number::New(isolate, x)
 #define TO_BOOLEAN(x) v8::Boolean::New(isolate, x)
 
@@ -16,4 +16,4 @@
 #define RETURN_UNDEFINED RETURN(v8::Undefined(isolate)); return
 
 // Exports
-#define EXPORT_CONST(name, x) exports->Set(TO_STRING(name), TO_NUMBER(x))
+#define EXPORT_CONST(name, x) exports->Set(isolate->GetCurrentContext(), TO_STRING(name), TO_NUMBER(x))

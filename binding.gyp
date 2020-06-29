@@ -42,6 +42,9 @@
                 [ # Windows Conditions
                     "OS=='win'",
                     {
+                        "libraries": [
+                            "C:\Windows\system32\opengl32.lib"
+                        ],
                         "cflags": [
                             "/verbosity:minimal"
                         ]

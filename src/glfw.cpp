@@ -19,12 +19,12 @@
 v8::Local<v8::Object> _fromGLFWvidmode(const GLFWvidmode* arg) {
 	v8::Isolate* isolate = v8::Isolate::GetCurrent();
 	v8::Local<v8::Object> ret = v8::Object::New(isolate);
-	ret->Set(TO_STRING("width"), TO_NUMBER(arg->width));
-	ret->Set(TO_STRING("height"), TO_NUMBER(arg->height));
-	ret->Set(TO_STRING("redBits"), TO_NUMBER(arg->redBits));
-	ret->Set(TO_STRING("greenBits"), TO_NUMBER(arg->greenBits));
-	ret->Set(TO_STRING("blueBits"), TO_NUMBER(arg->blueBits));
-	ret->Set(TO_STRING("refreshRate"), TO_NUMBER(arg->refreshRate));
+	ret->Set(isolate->GetCurrentContext(), TO_STRING("width"), TO_NUMBER(arg->width));
+	ret->Set(isolate->GetCurrentContext(), TO_STRING("height"), TO_NUMBER(arg->height));
+	ret->Set(isolate->GetCurrentContext(), TO_STRING("redBits"), TO_NUMBER(arg->redBits));
+	ret->Set(isolate->GetCurrentContext(), TO_STRING("greenBits"), TO_NUMBER(arg->greenBits));
+	ret->Set(isolate->GetCurrentContext(), TO_STRING("blueBits"), TO_NUMBER(arg->blueBits));
+	ret->Set(isolate->GetCurrentContext(), TO_STRING("refreshRate"), TO_NUMBER(arg->refreshRate));
 	return ret;
 }
 GLFWgammaramp* _toGLFWgammaramp(v8::Local<v8::Object> arg) {
@@ -48,10 +48,10 @@ v8::Local<v8::Object> _fromGLFWgammaramp(const GLFWgammaramp* arg) {
 	v8::Local<v8::ArrayBuffer> redArr = v8::ArrayBuffer::New(isolate, arg->red, arg->size * sizeof(unsigned short));
 	v8::Local<v8::ArrayBuffer> greenArr = v8::ArrayBuffer::New(isolate, arg->green, arg->size * sizeof(unsigned short));
 	v8::Local<v8::ArrayBuffer> blueArr = v8::ArrayBuffer::New(isolate, arg->blue, arg->size * sizeof(unsigned short));
-	ret->Set(TO_STRING("red"), v8::Uint16Array::New(redArr, 0, arg->size));
-	ret->Set(TO_STRING("green"), v8::Uint16Array::New(greenArr, 0, arg->size));
-	ret->Set(TO_STRING("blue"), v8::Uint16Array::New(blueArr, 0, arg->size));
-	ret->Set(TO_STRING("size"), TO_NUMBER(arg->size));
+	ret->Set(isolate->GetCurrentContext(), TO_STRING("red"), v8::Uint16Array::New(redArr, 0, arg->size));
+	ret->Set(isolate->GetCurrentContext(), TO_STRING("green"), v8::Uint16Array::New(greenArr, 0, arg->size));
+	ret->Set(isolate->GetCurrentContext(), TO_STRING("blue"), v8::Uint16Array::New(blueArr, 0, arg->size));
+	ret->Set(isolate->GetCurrentContext(), TO_STRING("size"), TO_NUMBER(arg->size));
 	return ret;
 }
 bool _toGLFWimage(GLFWimage* ret, v8::Local<v8::Object> arg) {
@@ -73,14 +73,14 @@ v8::Local<v8::Object> _fromGLFWgamepadstate(const GLFWgamepadstate* arg) {
 	v8::Local<v8::Object> ret = v8::Object::New(isolate);
 	v8::Local<v8::Array> buttonsArr = v8::Array::New(isolate, 15);
 	for(int i = 0; i < 15; i++) {
-		buttonsArr->Set(i, TO_NUMBER(arg->buttons[i]));
+		buttonsArr->Set(isolate->GetCurrentContext(), i, TO_NUMBER(arg->buttons[i]));
 	}
-	ret->Set(TO_STRING("buttons"), buttonsArr);
+	ret->Set(isolate->GetCurrentContext(), TO_STRING("buttons"), buttonsArr);
 	v8::Local<v8::Array> axesArr = v8::Array::New(isolate, 6);
 	for(int i = 0; i < 6; i++) {
-		axesArr->Set(i, TO_NUMBER(arg->axes[i]));
+		axesArr->Set(isolate->GetCurrentContext(), i, TO_NUMBER(arg->axes[i]));
 	}
-	ret->Set(TO_STRING("axes"), axesArr);
+	ret->Set(isolate->GetCurrentContext(), TO_STRING("axes"), axesArr);
 	return ret;
 }
 
@@ -110,9 +110,9 @@ NATIVE_FUNCTION(GetVersion) {
 	v8::Local<v8::Array> arr = v8::Array::New(isolate, 3);
 	int major, minor, rev;
 	glfwGetVersion(&major, &minor, &rev);
-	arr->Set(0, TO_NUMBER(major));
-	arr->Set(1, TO_NUMBER(minor));
-	arr->Set(2, TO_NUMBER(rev));
+	arr->Set(isolate->GetCurrentContext(), 0, TO_NUMBER(major));
+	arr->Set(isolate->GetCurrentContext(), 1, TO_NUMBER(minor));
+	arr->Set(isolate->GetCurrentContext(), 2, TO_NUMBER(rev));
 	RETURN(arr);
 }
 NATIVE_FUNCTION(GetVersionString) {
@@ -125,8 +125,8 @@ NATIVE_FUNCTION(GetError) {
 	const char* desc;
 	int ret = glfwGetError(&desc);
 	v8::Local<v8::Object> obj = v8::Object::New(isolate);
-	obj->Set(TO_STRING("code"), TO_NUMBER(ret));
-	obj->Set(TO_STRING("desc"), TO_STRING(desc));
+	obj->Set(isolate->GetCurrentContext(), TO_STRING("code"), TO_NUMBER(ret));
+	obj->Set(isolate->GetCurrentContext(), TO_STRING("desc"), TO_STRING(desc));
 	RETURN(obj);
 }
 NATIVE_FUNCTION(SetErrorCallback) {
@@ -143,7 +143,7 @@ NATIVE_FUNCTION(GetMonitors) {
 	GLFWmonitor** ret = glfwGetMonitors(&count);
 	v8::Local<v8::Array> arr = v8::Array::New(isolate, count);
 	for(int i = 0; i < count; i++) {
-		arr->Set(i, TO_NUMBER((uint64_t)ret[i]));
+		arr->Set(isolate->GetCurrentContext(), i, TO_NUMBER((uint64_t)ret[i]));
 	}
 	RETURN(arr);
 }
@@ -162,8 +162,8 @@ NATIVE_FUNCTION(GetMonitorPos) {
 	int xpos, ypos;
 	glfwGetMonitorPos(monitor, &xpos, &ypos);
 	v8::Local<v8::Object> obj = v8::Object::New(isolate);
-	obj->Set(TO_STRING("xpos"), TO_NUMBER(xpos));
-	obj->Set(TO_STRING("ypos"), TO_NUMBER(ypos));
+	obj->Set(isolate->GetCurrentContext(), TO_STRING("xpos"), TO_NUMBER(xpos));
+	obj->Set(isolate->GetCurrentContext(), TO_STRING("ypos"), TO_NUMBER(ypos));
 	RETURN(obj);
 }
 NATIVE_FUNCTION(GetMonitorWorkarea) {
@@ -176,10 +176,10 @@ NATIVE_FUNCTION(GetMonitorWorkarea) {
 	int xpos, ypos, width, height;
 	glfwGetMonitorWorkarea(monitor, &xpos, &ypos, &width, &height);
 	v8::Local<v8::Object> obj = v8::Object::New(isolate);
-	obj->Set(TO_STRING("xpos"), TO_NUMBER(xpos));
-	obj->Set(TO_STRING("ypos"), TO_NUMBER(ypos));
-	obj->Set(TO_STRING("width"), TO_NUMBER(width));
-	obj->Set(TO_STRING("height"), TO_NUMBER(height));
+	obj->Set(isolate->GetCurrentContext(), TO_STRING("xpos"), TO_NUMBER(xpos));
+	obj->Set(isolate->GetCurrentContext(), TO_STRING("ypos"), TO_NUMBER(ypos));
+	obj->Set(isolate->GetCurrentContext(), TO_STRING("width"), TO_NUMBER(width));
+	obj->Set(isolate->GetCurrentContext(), TO_STRING("height"), TO_NUMBER(height));
 	RETURN(obj);
 }
 NATIVE_FUNCTION(GetMonitorPhysicalSize) {
@@ -192,8 +192,8 @@ NATIVE_FUNCTION(GetMonitorPhysicalSize) {
 	int widthMM, heightMM;
 	glfwGetMonitorPhysicalSize(monitor, &widthMM, &heightMM);
 	v8::Local<v8::Object> obj = v8::Object::New(isolate);
-	obj->Set(TO_STRING("widthMM"), TO_NUMBER(widthMM));
-	obj->Set(TO_STRING("heightMM"), TO_NUMBER(heightMM));
+	obj->Set(isolate->GetCurrentContext(), TO_STRING("widthMM"), TO_NUMBER(widthMM));
+	obj->Set(isolate->GetCurrentContext(), TO_STRING("heightMM"), TO_NUMBER(heightMM));
 	RETURN(obj);
 }
 NATIVE_FUNCTION(GetMonitorContentScale) {
@@ -206,8 +206,8 @@ NATIVE_FUNCTION(GetMonitorContentScale) {
 	float xscale, yscale;
 	glfwGetMonitorContentScale(monitor, &xscale, &yscale);
 	v8::Local<v8::Object> obj = v8::Object::New(isolate);
-	obj->Set(TO_STRING("xscale"), TO_NUMBER(xscale));
-	obj->Set(TO_STRING("yscale"), TO_NUMBER(yscale));
+	obj->Set(isolate->GetCurrentContext(), TO_STRING("xscale"), TO_NUMBER(xscale));
+	obj->Set(isolate->GetCurrentContext(), TO_STRING("yscale"), TO_NUMBER(yscale));
 	RETURN(obj);
 }
 NATIVE_FUNCTION(GetMonitorName) {
@@ -261,7 +261,7 @@ NATIVE_FUNCTION(GetVideoModes) {
 	const GLFWvidmode* ret = glfwGetVideoModes(monitor, &count);
 	v8::Local<v8::Array> arr = v8::Array::New(isolate, count);
 	for(int i = 0; i < count; i++) {
-		arr->Set(i, _fromGLFWvidmode(&ret[i]));
+		arr->Set(isolate->GetCurrentContext(), i, _fromGLFWvidmode(&ret[i]));
 	}
 	RETURN(arr);
 }
@@ -424,8 +424,8 @@ NATIVE_FUNCTION(GetWindowPos) {
 	int xpos, ypos;
 	glfwGetWindowPos(window, &xpos, &ypos);
 	v8::Local<v8::Object> obj = v8::Object::New(isolate);
-	obj->Set(TO_STRING("xpos"), TO_NUMBER(xpos));
-	obj->Set(TO_STRING("ypos"), TO_NUMBER(ypos));
+	obj->Set(isolate->GetCurrentContext(), TO_STRING("xpos"), TO_NUMBER(xpos));
+	obj->Set(isolate->GetCurrentContext(), TO_STRING("ypos"), TO_NUMBER(ypos));
 	RETURN(obj);
 }
 NATIVE_FUNCTION(SetWindowPos) {
@@ -451,8 +451,8 @@ NATIVE_FUNCTION(GetWindowSize) {
 	int width, height;
 	glfwGetWindowSize(window, &width, &height);
 	v8::Local<v8::Object> obj = v8::Object::New(isolate);
-	obj->Set(TO_STRING("width"), TO_NUMBER(width));
-	obj->Set(TO_STRING("height"), TO_NUMBER(height));
+	obj->Set(isolate->GetCurrentContext(), TO_STRING("width"), TO_NUMBER(width));
+	obj->Set(isolate->GetCurrentContext(), TO_STRING("height"), TO_NUMBER(height));
 	RETURN(obj);
 }
 NATIVE_FUNCTION(SetWindowSizeLimits) {
@@ -508,8 +508,8 @@ NATIVE_FUNCTION(GetFramebufferSize) {
 	int width, height;
 	glfwGetFramebufferSize(window, &width, &height);
 	v8::Local<v8::Object> obj = v8::Object::New(isolate);
-	obj->Set(TO_STRING("width"), TO_NUMBER(width));
-	obj->Set(TO_STRING("height"), TO_NUMBER(height));
+	obj->Set(isolate->GetCurrentContext(), TO_STRING("width"), TO_NUMBER(width));
+	obj->Set(isolate->GetCurrentContext(), TO_STRING("height"), TO_NUMBER(height));
 	RETURN(obj);
 }
 NATIVE_FUNCTION(GetWindowFrameSize) {
@@ -522,10 +522,10 @@ NATIVE_FUNCTION(GetWindowFrameSize) {
 	int left, top, right, bottom;
 	glfwGetWindowFrameSize(window, &left, &top, &right, &bottom);
 	v8::Local<v8::Object> obj = v8::Object::New(isolate);
-	obj->Set(TO_STRING("left"), TO_NUMBER(left));
-	obj->Set(TO_STRING("top"), TO_NUMBER(top));
-	obj->Set(TO_STRING("right"), TO_NUMBER(right));
-	obj->Set(TO_STRING("bottom"), TO_NUMBER(bottom));
+	obj->Set(isolate->GetCurrentContext(), TO_STRING("left"), TO_NUMBER(left));
+	obj->Set(isolate->GetCurrentContext(), TO_STRING("top"), TO_NUMBER(top));
+	obj->Set(isolate->GetCurrentContext(), TO_STRING("right"), TO_NUMBER(right));
+	obj->Set(isolate->GetCurrentContext(), TO_STRING("bottom"), TO_NUMBER(bottom));
 	RETURN(obj);
 }
 NATIVE_FUNCTION(GetWindowContentScale) {
@@ -538,8 +538,8 @@ NATIVE_FUNCTION(GetWindowContentScale) {
 	float xscale, yscale;
 	glfwGetWindowContentScale(window, &xscale, &yscale);
 	v8::Local<v8::Object> obj = v8::Object::New(isolate);
-	obj->Set(TO_STRING("xscale"), TO_NUMBER(xscale));
-	obj->Set(TO_STRING("yscale"), TO_NUMBER(yscale));
+	obj->Set(isolate->GetCurrentContext(), TO_STRING("xscale"), TO_NUMBER(xscale));
+	obj->Set(isolate->GetCurrentContext(), TO_STRING("yscale"), TO_NUMBER(yscale));
 	RETURN(obj);
 }
 NATIVE_FUNCTION(GetWindowOpacity) {
@@ -904,8 +904,8 @@ NATIVE_FUNCTION(GetCursorPos) {
 	double xpos, ypos;
 	glfwGetCursorPos(window, &xpos, &ypos);
 	v8::Local<v8::Object> obj = v8::Object::New(isolate);
-	obj->Set(TO_STRING("xpos"), TO_NUMBER(xpos));
-	obj->Set(TO_STRING("ypos"), TO_NUMBER(ypos));
+	obj->Set(isolate->GetCurrentContext(), TO_STRING("xpos"), TO_NUMBER(xpos));
+	obj->Set(isolate->GetCurrentContext(), TO_STRING("ypos"), TO_NUMBER(ypos));
 	RETURN(obj);
 }
 NATIVE_FUNCTION(SetCursorPos) {
@@ -1073,7 +1073,7 @@ NATIVE_FUNCTION(GetJoystickAxes) {
 	const float* ret = glfwGetJoystickAxes(jid, &count);
 	v8::Local<v8::Array> arr = v8::Array::New(isolate, count);
 	for(int i = 0; i < count; i++) {
-		arr->Set(i, TO_NUMBER(ret[i]));
+		arr->Set(isolate->GetCurrentContext(), i, TO_NUMBER(ret[i]));
 	}
 	RETURN(arr);
 }
@@ -1086,7 +1086,7 @@ NATIVE_FUNCTION(GetJoystickButtons) {
 	const unsigned char* ret = glfwGetJoystickButtons(jid, &count);
 	v8::Local<v8::Array> arr = v8::Array::New(isolate, count);
 	for(int i = 0; i < count; i++) {
-		arr->Set(i, TO_NUMBER(ret[i]));
+		arr->Set(isolate->GetCurrentContext(), i, TO_NUMBER(ret[i]));
 	}
 	RETURN(arr);
 }
@@ -1099,7 +1099,7 @@ NATIVE_FUNCTION(GetJoystickHats) {
 	const unsigned char* ret = glfwGetJoystickHats(jid, &count);
 	v8::Local<v8::Array> arr = v8::Array::New(isolate, count);
 	for(int i = 0; i < count; i++) {
-		arr->Set(i, TO_NUMBER(ret[i]));
+		arr->Set(isolate->GetCurrentContext(), i, TO_NUMBER(ret[i]));
 	}
 	RETURN(arr);
 }
@@ -1174,11 +1174,11 @@ NATIVE_FUNCTION(GetGamepadState) {
 	if(args.Length() < 2) { THROW_ERROR("GetGamepadState takes 2 arguments."); }
 	if(!args[0]->IsNumber()) { THROW_TYPE_ERROR("jid is of type number!"); }
 	int jid = args[0]->IntegerValue(isolate->GetCurrentContext()).FromMaybe(0);
-	GLFWgamepadstate* state;
-	if(!glfwGetGamepadState(jid, state)) {
+	GLFWgamepadstate state;
+	if(!glfwGetGamepadState(jid, &state)) {
 		RETURN(TO_BOOLEAN(false));
 	} else {
-		RETURN(_fromGLFWgamepadstate(state));
+		RETURN(_fromGLFWgamepadstate(&state));
 	}
 }
 NATIVE_FUNCTION(SetClipboardString) {
@@ -1280,8 +1280,8 @@ NATIVE_FUNCTION(GetRequiredInstanceExtensions) {
 	uint32_t count;
 	const char** ret = glfwGetRequiredInstanceExtensions(&count);
 	v8::Local<v8::Array> arr = v8::Array::New(isolate, count);
-	for(int i = 0; i < count; i++) {
-		arr->Set(i, TO_STRING(ret[i]));
+	for(uint32_t i = 0; i < count; i++) {
+		arr->Set(isolate->GetCurrentContext(), i, TO_STRING(ret[i]));
 	}
 	RETURN(arr);
 }
